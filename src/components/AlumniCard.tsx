@@ -6,6 +6,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
 import { Users, Briefcase, Mail, MessageSquare } from "lucide-react";
 
 interface AlumniCardProps {
@@ -31,11 +32,28 @@ export function AlumniCard({
   onConnect,
   onMessage,
 }: AlumniCardProps) {
+  const { toast } = useToast();
   const initials = name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
+
+  const handleConnect = () => {
+    onConnect(id);
+    toast({
+      title: "Connection request sent",
+      description: `You've sent a connection request to ${name}.`
+    });
+  };
+
+  const handleMessage = () => {
+    onMessage(id);
+    toast({
+      title: "Message initiated",
+      description: `You can now chat with ${name}.`
+    });
+  };
 
   return (
     <Card className="overflow-hidden border border-alumni-100 hover:border-alumni-200 transition-all">
@@ -73,7 +91,7 @@ export function AlumniCard({
           variant="outline" 
           size="sm" 
           className="w-full"
-          onClick={() => onConnect(id)}
+          onClick={handleConnect}
         >
           <Mail className="h-4 w-4 mr-2" />
           Connect
@@ -81,7 +99,7 @@ export function AlumniCard({
         <Button
           size="sm"
           className="w-full bg-alumni-400 hover:bg-alumni-500"
-          onClick={() => onMessage(id)}
+          onClick={handleMessage}
         >
           <MessageSquare className="h-4 w-4 mr-2" />
           Message

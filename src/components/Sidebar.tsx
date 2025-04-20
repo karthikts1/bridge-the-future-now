@@ -8,7 +8,10 @@ import {
   Briefcase,
   GraduationCap,
   Book,
-  LayoutDashboard
+  LayoutDashboard,
+  Info,
+  Settings,
+  UserRound
 } from "lucide-react";
 
 interface SidebarItemProps {
@@ -74,6 +77,11 @@ export function Sidebar() {
             href="/dashboard/academic" 
             label="Academic Support" 
           />
+          <SidebarItem 
+            icon={<Info className="h-5 w-5" />} 
+            href="/about" 
+            label="About" 
+          />
         </div>
       </div>
       
@@ -83,12 +91,12 @@ export function Sidebar() {
         </h2>
         <div className="space-y-1">
           <SidebarItem 
-            icon={<Users className="h-5 w-5" />} 
+            icon={<UserRound className="h-5 w-5" />} 
             href="/dashboard/profile" 
             label="Profile" 
           />
           <SidebarItem 
-            icon={<Book className="h-5 w-5" />} 
+            icon={<Settings className="h-5 w-5" />} 
             href="/dashboard/settings" 
             label="Settings" 
           />

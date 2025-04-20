@@ -4,6 +4,7 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { FeatureCard } from "@/components/FeatureCard";
 import { AlumniCard } from "@/components/AlumniCard";
 import { getRecommendedAlumni } from "@/services/mockData";
+import { useToast } from "@/components/ui/use-toast";
 import { 
   MessageSquare, 
   Users, 
@@ -14,7 +15,28 @@ import {
 
 export default function Dashboard() {
   const { user } = useUser();
+  const { toast } = useToast();
   const recommendedAlumni = user?.role === 'student' ? getRecommendedAlumni(user.field) : [];
+
+  const handleConnectWithAlumni = (id: string) => {
+    const alumni = recommendedAlumni.find(alumni => alumni.id === id);
+    if (alumni) {
+      toast({
+        title: "Connection request sent",
+        description: `You've sent a connection request to ${alumni.name}.`
+      });
+    }
+  };
+
+  const handleMessageAlumni = (id: string) => {
+    const alumni = recommendedAlumni.find(alumni => alumni.id === id);
+    if (alumni) {
+      toast({
+        title: "Message initiated",
+        description: `You can now chat with ${alumni.name}.`
+      });
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -70,9 +92,15 @@ export default function Dashboard() {
               {recommendedAlumni.map(alumni => (
                 <AlumniCard 
                   key={alumni.id}
-                  {...alumni}
-                  onConnect={(id) => console.log('Connect with', id)}
-                  onMessage={(id) => console.log('Message', id)}
+                  id={alumni.id}
+                  name={alumni.name}
+                  avatarUrl={alumni.avatar}
+                  position={alumni.position}
+                  company={alumni.company}
+                  graduationYear={alumni.graduationYear}
+                  field={alumni.field}
+                  onConnect={handleConnectWithAlumni}
+                  onMessage={handleMessageAlumni}
                 />
               ))}
             </div>
