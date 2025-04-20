@@ -12,8 +12,8 @@ interface AlumniCardProps {
   id: string;
   name: string;
   avatarUrl?: string;
-  position: string;
-  company: string;
+  position?: string; // Made optional
+  company?: string; // Made optional
   graduationYear: string;
   field: string;
   onConnect: (id: string) => void;
@@ -49,7 +49,12 @@ export function AlumniCard({
           </Avatar>
           <div>
             <h3 className="font-semibold text-lg">{name}</h3>
-            <p className="text-sm text-muted-foreground">{position} at {company}</p>
+            <p className="text-sm text-muted-foreground">
+              {position && company ? `${position} at ${company}` : 
+               position ? position : 
+               company ? `Works at ${company}` : 
+               "Alumni"}
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
