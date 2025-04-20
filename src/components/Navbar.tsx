@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
@@ -18,28 +17,23 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b bg-[#1a365d] text-white">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <img 
-            src="/lovable-uploads/928d6088-8de4-4cb5-8681-89f5514c8793.png" 
-            alt="AlumniConnect Logo" 
-            className="h-12 w-12"
-          />
-          <span className="font-bold text-xl tracking-tight text-alumni-500">AlumniConnect</span>
+          <span className="font-bold text-2xl tracking-tight">AlumniConnect</span>
         </Link>
         
         <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium text-foreground/70 transition-colors hover:text-foreground">
+          <Link to="/" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
             Home
           </Link>
-          <Link to="/about" className="text-sm font-medium text-foreground/70 transition-colors hover:text-foreground">
+          <Link to="/about" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
             About Us
           </Link>
-          <Link to="/features" className="text-sm font-medium text-foreground/70 transition-colors hover:text-foreground">
+          <Link to="/features" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
             Features
           </Link>
-          <Link to="/contact" className="text-sm font-medium text-foreground/70 transition-colors hover:text-foreground">
+          <Link to="/contact" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
             Contact
           </Link>
         </nav>
@@ -49,7 +43,7 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
             <Link to="/dashboard">
               <Avatar>
                 <AvatarImage src="" />
-                <AvatarFallback className="bg-alumni-300 text-white">
+                <AvatarFallback className="bg-[#90cdf4] text-[#1a365d]">
                   <User className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
@@ -57,13 +51,13 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
           ) : (
             <div className="hidden md:flex space-x-2">
               <Link to="/login">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="border-white text-white hover:bg-white/10">
                   <LogIn className="h-4 w-4 mr-2" />
                   Log In
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="sm" className="bg-alumni-400 hover:bg-alumni-500">Register</Button>
+                <Button size="sm" className="bg-[#90cdf4] hover:bg-[#63b3ed] text-[#1a365d]">Register</Button>
               </Link>
             </div>
           )}
@@ -120,7 +114,7 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
                       to="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Button className="w-full bg-alumni-400 hover:bg-alumni-500">Register</Button>
+                      <Button className="w-full bg-[#90cdf4] hover:bg-[#63b3ed] text-[#1a365d]">Register</Button>
                     </Link>
                   </div>
                 )}

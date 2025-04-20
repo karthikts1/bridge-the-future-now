@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
@@ -11,43 +10,34 @@ export default function Index() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-alumni-50 via-white to-alumni-50">
+      <section className="relative py-20 bg-gradient-to-br from-[#1a365d] via-[#2a4365] to-[#1a365d] text-white">
         <div className="container px-4 mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-                Bridge Your <span className="text-alumni-500">Future</span> with Alumni Connections
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                AlumniConnect brings together students and alumni for mentorship, career guidance, and academic support.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/register">
-                  <Button className="bg-alumni-400 hover:bg-alumni-500 text-lg px-6 py-6 h-auto">
-                    Join the Network
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button variant="outline" className="text-lg px-6 py-6 h-auto">
-                    Sign In
-                  </Button>
-                </Link>
-              </div>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <div className="flex -space-x-2 mr-3">
-                  <div className="h-7 w-7 rounded-full bg-alumni-200"></div>
-                  <div className="h-7 w-7 rounded-full bg-alumni-300"></div>
-                  <div className="h-7 w-7 rounded-full bg-alumni-400"></div>
-                </div>
-                <span>Join 5,000+ alumni and students already connected</span>
-              </div>
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+              Bridge Your <span className="text-[#90cdf4]">Future</span> with Alumni Connections
+            </h1>
+            <p className="text-lg text-gray-300 mb-8">
+              AlumniConnect brings together students and alumni for mentorship, career guidance, and academic support.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <Link to="/register">
+                <Button className="bg-[#90cdf4] hover:bg-[#63b3ed] text-[#1a365d] text-lg px-6 py-6 h-auto font-semibold">
+                  Join the Network
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button variant="outline" className="text-lg px-6 py-6 h-auto border-white text-white hover:bg-white/10">
+                  Sign In
+                </Button>
+              </Link>
             </div>
-            <div className="hidden md:block">
-              <img 
-                src="public/lovable-uploads/ccc3d22c-e336-4ba6-94b3-2527f8494d5f.png" 
-                alt="AlumniConnect Flow" 
-                className="mx-auto rounded-lg shadow-lg max-w-md border border-alumni-100" 
-              />
+            <div className="flex items-center justify-center text-sm text-gray-300">
+              <div className="flex -space-x-2 mr-3">
+                <div className="h-7 w-7 rounded-full bg-[#90cdf4]"></div>
+                <div className="h-7 w-7 rounded-full bg-[#63b3ed]"></div>
+                <div className="h-7 w-7 rounded-full bg-[#4299e1]"></div>
+              </div>
+              <span>Join 5,000+ alumni and students already connected</span>
             </div>
           </div>
         </div>
