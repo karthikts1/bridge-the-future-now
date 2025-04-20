@@ -21,10 +21,12 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <div className="bg-alumni-300 rounded-lg w-8 h-8 flex items-center justify-center">
-            <span className="font-bold text-white">A</span>
-          </div>
-          <span className="font-bold text-xl tracking-tight text-alumni-600">AlumniConnect</span>
+          <img 
+            src="/lovable-uploads/928d6088-8de4-4cb5-8681-89f5514c8793.png" 
+            alt="AlumniConnect Logo" 
+            className="h-12 w-12"
+          />
+          <span className="font-bold text-xl tracking-tight text-alumni-500">AlumniConnect</span>
         </Link>
         
         <nav className="hidden md:flex items-center space-x-6">

@@ -1,9 +1,9 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useUser } from "@/contexts/UserContext";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { FeatureCard } from "@/components/FeatureCard";
 import { AlumniCard } from "@/components/AlumniCard";
+import { getRecommendedAlumni } from "@/services/mockData";
 import { 
   MessageSquare, 
   Users, 
@@ -11,128 +11,90 @@ import {
   GraduationCap, 
   Book 
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-
-// Mock alumni data
-const mockAlumni = [
-  {
-    id: "1",
-    name: "Alex Johnson",
-    position: "Software Engineer",
-    company: "Google",
-    graduationYear: "2018",
-    field: "Computer Science"
-  },
-  {
-    id: "2",
-    name: "Sarah Williams",
-    position: "UX Designer",
-    company: "Apple",
-    graduationYear: "2019",
-    field: "Design"
-  },
-  {
-    id: "3",
-    name: "Michael Chen",
-    position: "Product Manager",
-    company: "Amazon",
-    graduationYear: "2017",
-    field: "Business"
-  }
-];
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const [userName, setUserName] = useState("User"); // In a real app, fetch user's name
-
-  // Handler for alumni connections
-  const handleConnectWithAlumni = (id: string) => {
-    toast({
-      title: "Connection request sent",
-      description: `Your request has been sent to ${mockAlumni.find(a => a.id === id)?.name}`,
-    });
-  };
-
-  // Handler for alumni messaging
-  const handleMessageAlumni = (id: string) => {
-    navigate("/dashboard/forums");
-    toast({
-      title: "Message thread opened",
-      description: `You can now chat with ${mockAlumni.find(a => a.id === id)?.name}`,
-    });
-  };
+  const { user } = useUser();
+  const recommendedAlumni = user?.role === 'student' ? getRecommendedAlumni(user.field) : [];
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Welcome back, {userName}</h1>
+          <h1 className="text-3xl font-bold">Welcome, {user?.name}</h1>
           <p className="text-muted-foreground mt-1">
-            Here's what's happening in the alumni network today.
+            {user?.role === 'student' 
+              ? "Explore mentorship opportunities and connect with alumni"
+              : "Share your experience and mentor students"}
           </p>
         </div>
 
         {/* Features section */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Features</h2>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/features")}>
-              View All
-            </Button>
-          </div>
-          
+          <h2 className="text-xl font-semibold">Features</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <FeatureCard 
               icon={<MessageSquare className="h-5 w-5" />}
               title="Discussion Forums"
-              description="Engage in conversations with alumni and current students."
+              description={user?.role === 'student' 
+                ? "Engage in discussions with alumni and peers"
+                : "Share your knowledge and experiences"}
               linkTo="/dashboard/forums"
               buttonText="Join Discussions"
             />
             <FeatureCard 
               icon={<Users className="h-5 w-5" />}
               title="Mentorship Programs"
-              description="Connect with alumni mentors for career guidance."
+              description={user?.role === 'student'
+                ? "Connect with alumni mentors for guidance"
+                : "Mentor students and shape future professionals"}
               linkTo="/dashboard/mentorship"
-              buttonText="Find a Mentor"
+              buttonText={user?.role === 'student' ? "Find a Mentor" : "Become a Mentor"}
             />
             <FeatureCard 
               icon={<Briefcase className="h-5 w-5" />}
               title="Career Guidance"
-              description="Get advice for your career path and job search."
+              description={user?.role === 'student'
+                ? "Get career advice from experienced professionals"
+                : "Guide students in their career choices"}
               linkTo="/dashboard/career"
               buttonText="Explore Careers"
             />
           </div>
         </div>
 
-        {/* Alumni suggestions */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Recommended Alumni Connections</h2>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/connections")}>
-              View All
-            </Button>
+        {/* Recommendations section - only for students */}
+        {user?.role === 'student' && recommendedAlumni.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Recommended Alumni in {user.field}</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {recommendedAlumni.map(alumni => (
+                <AlumniCard 
+                  key={alumni.id}
+                  {...alumni}
+                  onConnect={(id) => console.log('Connect with', id)}
+                  onMessage={(id) => console.log('Message', id)}
+                />
+              ))}
+            </div>
           </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {mockAlumni.map(alumni => (
-              <AlumniCard 
-                key={alumni.id}
-                id={alumni.id}
-                name={alumni.name}
-                position={alumni.position}
-                company={alumni.company}
-                graduationYear={alumni.graduationYear}
-                field={alumni.field}
-                onConnect={handleConnectWithAlumni}
-                onMessage={handleMessageAlumni}
-              />
-            ))}
+        )}
+
+        {/* Activity section for alumni */}
+        {user?.role === 'alumni' && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Your Impact</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-6 rounded-lg bg-alumni-50 border border-alumni-100">
+                <h3 className="font-semibold mb-2">Students Mentored</h3>
+                <p className="text-3xl font-bold text-alumni-500">12</p>
+              </div>
+              <div className="p-6 rounded-lg bg-alumni-50 border border-alumni-100">
+                <h3 className="font-semibold mb-2">Forum Contributions</h3>
+                <p className="text-3xl font-bold text-alumni-500">45</p>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </DashboardLayout>
   );
