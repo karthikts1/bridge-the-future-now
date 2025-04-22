@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Menu, X, User, LogIn } from "lucide-react";
+import { Menu, User, LogIn } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -17,23 +18,23 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-[#1a365d] text-white">
+    <header className="sticky top-0 z-50 w-full border-b bg-academic-primary shadow-md">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="font-bold text-2xl tracking-tight">AlumniConnect</span>
+          <span className="font-bold text-2xl tracking-tight text-white">AlumniConnect</span>
         </Link>
         
         <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
+          <Link to="/" className="text-sm font-medium text-white/90 transition-colors hover:text-white">
             Home
           </Link>
-          <Link to="/about" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
+          <Link to="/about" className="text-sm font-medium text-white/90 transition-colors hover:text-white">
             About Us
           </Link>
-          <Link to="/features" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
+          <Link to="/features" className="text-sm font-medium text-white/90 transition-colors hover:text-white">
             Features
           </Link>
-          <Link to="/contact" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
+          <Link to="/contact" className="text-sm font-medium text-white/90 transition-colors hover:text-white">
             Contact
           </Link>
         </nav>
@@ -41,9 +42,9 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
         <div className="flex items-center space-x-3">
           {isAuthenticated ? (
             <Link to="/dashboard">
-              <Avatar>
+              <Avatar className="border-2 border-academic-accent">
                 <AvatarImage src="" />
-                <AvatarFallback className="bg-[#90cdf4] text-[#1a365d]">
+                <AvatarFallback className="bg-academic-accent text-white">
                   <User className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
@@ -51,20 +52,33 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
           ) : (
             <div className="hidden md:flex space-x-2">
               <Link to="/login">
-                <Button variant="outline" size="sm" className="border-white text-white hover:bg-white/10">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-academic-light text-academic-light hover:bg-academic-light/10 hover:text-white"
+                >
                   <LogIn className="h-4 w-4 mr-2" />
                   Log In
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="sm" className="bg-[#90cdf4] hover:bg-[#63b3ed] text-[#1a365d]">Register</Button>
+                <Button 
+                  size="sm" 
+                  className="bg-academic-accent hover:bg-academic-accent/90 text-white"
+                >
+                  Register
+                </Button>
               </Link>
             </div>
           )}
           
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="text-white hover:bg-academic-primary/50"
+              >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
               </Button>

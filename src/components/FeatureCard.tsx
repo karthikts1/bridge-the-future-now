@@ -1,9 +1,7 @@
 
-import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ReactNode } from "react";
 
 interface FeatureCardProps {
   icon: ReactNode;
@@ -13,33 +11,21 @@ interface FeatureCardProps {
   buttonText: string;
 }
 
-export function FeatureCard({ 
-  icon, 
-  title, 
-  description, 
-  linkTo, 
-  buttonText 
-}: FeatureCardProps) {
+export function FeatureCard({ icon, title, description, linkTo, buttonText }: FeatureCardProps) {
   return (
-    <Card className="border border-alumni-100 hover:border-alumni-200 transition-all h-full flex flex-col">
-      <CardContent className="flex-1 pt-6">
-        <div className="h-12 w-12 rounded-full bg-alumni-100 flex items-center justify-center mb-4">
-          <div className="text-alumni-500">{icon}</div>
-        </div>
-        <h3 className="font-semibold text-lg mb-2">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </CardContent>
-      <CardFooter>
-        <Link to={linkTo} className="w-full">
-          <Button 
-            className="w-full bg-alumni-400 hover:bg-alumni-500"
-            size="sm"
-          >
-            {buttonText}
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
+    <div className="group rounded-lg border border-academic-muted/20 bg-white p-6 shadow-lg transition-all hover:shadow-xl">
+      <div className="mb-4 inline-block rounded-full bg-academic-light p-3 text-academic-primary group-hover:bg-academic-primary group-hover:text-white">
+        {icon}
+      </div>
+      <h3 className="mb-2 text-xl font-semibold text-academic-dark">{title}</h3>
+      <p className="mb-4 text-academic-muted">{description}</p>
+      <Link to={linkTo}>
+        <Button 
+          className="w-full bg-academic-primary hover:bg-academic-primary/90 text-white"
+        >
+          {buttonText}
+        </Button>
+      </Link>
+    </div>
   );
 }

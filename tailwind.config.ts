@@ -74,6 +74,18 @@ export default {
           'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))'
+        },
+        academic: {
+          primary: "#1a4971",
+          secondary: "#2c3e50",
+          accent: "#e67e22",
+          muted: "#95a5a6",
+          light: "#ecf0f1",
+          dark: "#2c3e50",
+          success: "#27ae60",
+          warning: "#f39c12",
+          error: "#c0392b",
+          link: "#3498db",
         }
       },
       borderRadius: {

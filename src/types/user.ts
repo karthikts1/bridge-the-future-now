@@ -1,5 +1,4 @@
-
-export type UserRole = 'student' | 'alumni';
+export type UserRole = 'student' | 'alumni' | 'faculty';
 
 export interface User {
   id: string;
@@ -11,6 +10,7 @@ export interface User {
   company?: string;
   position?: string;
   avatar?: string;
+  department?: string; // For faculty
 }
 
 export interface UserContextType {

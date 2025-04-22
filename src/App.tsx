@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserProvider } from "@/contexts/UserContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -35,12 +36,54 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/features" element={<Features />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/forums" element={<Forums />} />
-            <Route path="/dashboard/mentorship" element={<Mentorship />} />
-            <Route path="/dashboard/career" element={<Career />} />
-            <Route path="/dashboard/placement" element={<Placement />} />
-            <Route path="/dashboard/academic" element={<Academic />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/forums"
+              element={
+                <ProtectedRoute>
+                  <Forums />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/mentorship"
+              element={
+                <ProtectedRoute allowedRoles={['student', 'alumni']}>
+                  <Mentorship />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/career"
+              element={
+                <ProtectedRoute allowedRoles={['student', 'alumni']}>
+                  <Career />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/placement"
+              element={
+                <ProtectedRoute allowedRoles={['student', 'alumni', 'faculty']}>
+                  <Placement />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/academic"
+              element={
+                <ProtectedRoute allowedRoles={['student', 'faculty']}>
+                  <Academic />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
