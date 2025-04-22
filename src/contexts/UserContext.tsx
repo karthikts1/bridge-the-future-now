@@ -1,11 +1,34 @@
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, UserContextType } from '@/types/user';
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+
+  // Load user from localStorage on initial mount
+  useEffect(() => {
+    const savedUserData = localStorage.getItem("userData");
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    
+    if (isAuthenticated && savedUserData) {
+      try {
+        const parsedUser = JSON.parse(savedUserData);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Failed to parse user data:", error);
+        localStorage.removeItem("userData");
+      }
+    }
+  }, []);
+
+  // Save user to localStorage whenever it changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("userData", JSON.stringify(user));
+    }
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

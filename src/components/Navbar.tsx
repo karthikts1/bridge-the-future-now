@@ -1,21 +1,55 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Menu, User, LogIn } from "lucide-react";
+import { Menu, User, LogIn, LogOut } from "lucide-react";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from "./ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { useUser } from "@/contexts/UserContext";
+import { useToast } from "@/components/ui/use-toast";
 
 interface NavbarProps {
   isAuthenticated?: boolean;
 }
 
-export function Navbar({ isAuthenticated = false }: NavbarProps) {
+export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Use prop if provided, otherwise check localStorage and user context
+  const isAuthenticated = propIsAuthenticated !== undefined 
+    ? propIsAuthenticated 
+    : (localStorage.getItem("isAuthenticated") === "true" && user !== null);
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userData");
+    setUser(null);
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account"
+    });
+    navigate("/login");
+  };
+
+  const getUserInitials = () => {
+    if (!user?.name) return "U";
+    return user.name.substring(0, 2).toUpperCase();
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-academic-primary shadow-md">
@@ -41,21 +75,38 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
         
         <div className="flex items-center space-x-3">
           {isAuthenticated ? (
-            <Link to="/dashboard">
-              <Avatar className="border-2 border-academic-accent">
-                <AvatarImage src="" />
-                <AvatarFallback className="bg-academic-accent text-white">
-                  <User className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="border-2 border-academic-accent hover:border-white cursor-pointer">
+                  <AvatarImage src={user?.avatar || ""} />
+                  <AvatarFallback className="bg-academic-accent text-white">
+                    {getUserInitials()}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs text-muted-foreground">
+                  {user?.role}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard" className="cursor-pointer w-full">Dashboard</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-red-500 cursor-pointer">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <div className="hidden md:flex space-x-2">
               <Link to="/login">
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="border-academic-light text-academic-light hover:bg-academic-light/10 hover:text-white"
+                  className="border-white text-white hover:bg-white hover:text-academic-primary"
                 >
                   <LogIn className="h-4 w-4 mr-2" />
                   Log In
@@ -114,13 +165,46 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
                   Contact
                 </Link>
                 
-                {!isAuthenticated && (
+                {isAuthenticated ? (
+                  <div className="border-t pt-4 mt-4">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium">{user?.name}</p>
+                        <p className="text-sm text-muted-foreground capitalize">{user?.role}</p>
+                      </div>
+                    </div>
+                    <Link 
+                      to="/dashboard" 
+                      className="block w-full mb-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Button variant="outline" className="w-full justify-start">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="destructive" 
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout
+                    </Button>
+                  </div>
+                ) : (
                   <div className="flex flex-col space-y-2 mt-4 pt-4 border-t">
                     <Link 
                       to="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <Button variant="outline" className="w-full">
+                        <LogIn className="h-4 w-4 mr-2" />
                         Log In
                       </Button>
                     </Link>
@@ -128,7 +212,7 @@ export function Navbar({ isAuthenticated = false }: NavbarProps) {
                       to="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Button className="w-full bg-[#90cdf4] hover:bg-[#63b3ed] text-[#1a365d]">Register</Button>
+                      <Button className="w-full bg-academic-accent hover:bg-academic-accent/90 text-white">Register</Button>
                     </Link>
                   </div>
                 )}
