@@ -48,13 +48,6 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
     }
   }, [user, setUser, navigate, isAuthenticated, toast]);
 
-  // Save user data to localStorage when user changes
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("userData", JSON.stringify(user));
-    }
-  }, [user]);
-
   if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
   }

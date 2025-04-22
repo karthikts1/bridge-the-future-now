@@ -19,6 +19,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         console.error("Failed to parse user data:", error);
         localStorage.removeItem("userData");
+        localStorage.removeItem("isAuthenticated");
       }
     }
   }, []);
@@ -27,6 +28,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (user) {
       localStorage.setItem("userData", JSON.stringify(user));
+      localStorage.setItem("isAuthenticated", "true");
+    } else {
+      localStorage.removeItem("userData");
+      localStorage.removeItem("isAuthenticated");
     }
   }, [user]);
 

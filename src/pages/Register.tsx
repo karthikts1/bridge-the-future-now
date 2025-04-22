@@ -149,13 +149,13 @@ export default function Register() {
                       </SelectContent>
                     </Select>
                   </div>
-                  {userType !== 'faculty' && (
+                  {(userType === 'student' || userType === 'alumni') && (
                     <div className="space-y-2">
                       <Label htmlFor="graduationYear">Graduation Year</Label>
                       <Select 
                         value={graduationYear} 
                         onValueChange={setGraduationYear} 
-                        required={userType !== 'faculty'}
+                        required={userType === 'student' || userType === 'alumni'}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select year" />
