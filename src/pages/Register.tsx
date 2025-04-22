@@ -134,7 +134,11 @@ export default function Register() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="userType">I am a</Label>
-                    <Select value={userType} onValueChange={setUserType} required>
+                    <Select 
+                      value={userType} 
+                      onValueChange={(value: string) => setUserType(value as UserRole)} 
+                      required
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
@@ -148,7 +152,11 @@ export default function Register() {
                   {userType !== 'faculty' && (
                     <div className="space-y-2">
                       <Label htmlFor="graduationYear">Graduation Year</Label>
-                      <Select value={graduationYear} onValueChange={setGraduationYear} required={userType !== 'faculty'}>
+                      <Select 
+                        value={graduationYear} 
+                        onValueChange={setGraduationYear} 
+                        required={userType !== 'faculty'}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select year" />
                         </SelectTrigger>
