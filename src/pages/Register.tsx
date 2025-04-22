@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 import { 
   Card,
   CardContent,
@@ -21,17 +22,21 @@ import {
 } from "@/components/ui/select";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { useUser } from "@/contexts/UserContext";
+import { UserRole } from "@/types/user";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [userType, setUserType] = useState("");
+  const [userType, setUserType] = useState<UserRole | "">("");
   const [graduationYear, setGraduationYear] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { setUser } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,13 +46,41 @@ export default function Register() {
       return;
     }
     
+    if (!userType) {
+      setError("Please select a user type");
+      return;
+    }
+    
     setIsLoading(true);
     setError(null);
     
     // Mock registration - In a real app, this would be an API call
     setTimeout(() => {
-      // For demo purposes, registration is always successful
+      // Create mock user based on registration
+      const mockUser = {
+        id: "user-" + Math.random().toString(36).substring(2, 9),
+        name: fullName,
+        email: email,
+        role: userType as UserRole,
+        graduationYear: userType !== 'faculty' ? graduationYear : undefined,
+        field: userType !== 'faculty' ? "Computer Science" : undefined,
+        company: userType === 'alumni' ? "New Graduate" : undefined,
+        position: userType === 'alumni' ? "Entry Level" : undefined,
+        department: userType === 'faculty' ? "Department of Computer Science" : undefined,
+      };
+      
+      // Set user in context
+      setUser(mockUser);
+      
+      // Save in local storage
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userData", JSON.stringify(mockUser));
+      
+      toast({
+        title: "Registration successful",
+        description: `Welcome to AlumniConnect, ${fullName}!`,
+      });
+      
       setIsLoading(false);
       navigate("/dashboard");
     }, 1500);
@@ -112,22 +145,24 @@ export default function Register() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="graduationYear">Graduation Year</Label>
-                    <Select value={graduationYear} onValueChange={setGraduationYear} required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select year" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {yearOptions.map(year => (
-                          <SelectItem key={year} value={year.toString()}>
-                            {year}
-                          </SelectItem>
-                        ))}
-                        <SelectItem value="future">Still Studying</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {userType !== 'faculty' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="graduationYear">Graduation Year</Label>
+                      <Select value={graduationYear} onValueChange={setGraduationYear} required={userType !== 'faculty'}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {yearOptions.map(year => (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                          <SelectItem value="future">Still Studying</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>

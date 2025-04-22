@@ -16,6 +16,7 @@ import {
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useUser } from "@/contexts/UserContext";
+import { UserRole } from "@/types/user";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -31,10 +32,17 @@ export default function Login() {
     setIsLoading(true);
     setError(null);
     
+    // Validate inputs
+    if (!email || !password) {
+      setError("Please enter both email and password");
+      setIsLoading(false);
+      return;
+    }
+    
     // Mock authentication - In a real app, this would be an API call
     setTimeout(() => {
       // For demo purposes, determine user role based on email
-      let userRole = 'student';
+      let userRole: UserRole = 'student';
       
       if (email.includes('alumni')) {
         userRole = 'alumni';
@@ -47,12 +55,13 @@ export default function Login() {
         id: "user-" + Math.random().toString(36).substring(2, 9),
         name: email.split('@')[0],
         email: email,
-        role: userRole as 'student' | 'alumni' | 'faculty',
-        graduationYear: userRole === 'student' ? '2025' : '2020',
-        field: 'Computer Science',
+        role: userRole,
+        graduationYear: userRole === 'student' ? '2025' : userRole === 'alumni' ? '2020' : undefined,
+        field: userRole !== 'faculty' ? 'Computer Science' : undefined,
         company: userRole === 'alumni' ? 'Tech Corp' : undefined,
         position: userRole === 'alumni' ? 'Software Engineer' : undefined,
         department: userRole === 'faculty' ? 'Computer Science Department' : undefined,
+        bio: `This is a demo ${userRole} account.`
       };
       
       // Set user in context
@@ -60,6 +69,7 @@ export default function Login() {
       
       // Set authentication in local storage
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userData", JSON.stringify(mockUser));
       
       toast({
         title: "Login successful",

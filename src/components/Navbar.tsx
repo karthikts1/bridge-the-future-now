@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
@@ -30,7 +29,6 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Use prop if provided, otherwise check localStorage and user context
   const isAuthenticated = propIsAuthenticated !== undefined 
     ? propIsAuthenticated 
     : (localStorage.getItem("isAuthenticated") === "true" && user !== null);
@@ -106,7 +104,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="border-white text-white hover:bg-white hover:text-academic-primary"
+                  className="border-white text-white hover:bg-white hover:text-academic-primary font-medium shadow-sm"
                 >
                   <LogIn className="h-4 w-4 mr-2" />
                   Log In
@@ -115,7 +113,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
               <Link to="/register">
                 <Button 
                   size="sm" 
-                  className="bg-academic-accent hover:bg-academic-accent/90 text-white"
+                  className="bg-white text-academic-primary hover:bg-gray-100 font-medium shadow-sm"
                 >
                   Register
                 </Button>

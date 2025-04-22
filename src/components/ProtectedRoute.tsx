@@ -29,14 +29,24 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
           localStorage.removeItem("userData");
           localStorage.removeItem("isAuthenticated");
           navigate("/login");
+          toast({
+            title: "Session expired",
+            description: "Your session has expired. Please sign in again.",
+            variant: "destructive"
+          });
         }
       } else {
         // If no user data, redirect to login
         localStorage.removeItem("isAuthenticated");
         navigate("/login");
+        toast({
+          title: "Authentication required",
+          description: "Please sign in to access this page",
+          variant: "destructive"
+        });
       }
     }
-  }, [user, setUser, navigate, isAuthenticated]);
+  }, [user, setUser, navigate, isAuthenticated, toast]);
 
   // Save user data to localStorage when user changes
   useEffect(() => {
@@ -46,11 +56,6 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
   }, [user]);
 
   if (!isAuthenticated || !user) {
-    toast({
-      title: "Authentication required",
-      description: "Please sign in to access this page",
-      variant: "destructive"
-    });
     return <Navigate to="/login" replace />;
   }
 

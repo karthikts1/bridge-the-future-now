@@ -59,6 +59,14 @@ const mockMentors = [
   }
 ];
 
+// Define industry options for filtering
+const industryOptions = [
+  { label: "All Industries", value: "all" },
+  { label: "Technology", value: "tech" },
+  { label: "Finance", value: "finance" },
+  { label: "Marketing", value: "marketing" }
+];
+
 export default function Mentorship() {
   const [searchQuery, setSearchQuery] = useState("");
   const [industryFilter, setIndustryFilter] = useState("all");
@@ -82,7 +90,9 @@ export default function Mentorship() {
       
     const matchesIndustry = 
       industryFilter === "all" || 
-      mentor.company.toLowerCase().includes(industryFilter.toLowerCase());
+      (industryFilter === "tech" && mentor.company.toLowerCase().includes("microsoft")) ||
+      (industryFilter === "finance" && mentor.company.toLowerCase().includes("goldman")) ||
+      (industryFilter === "marketing" && mentor.company.toLowerCase().includes("netflix"));
     
     return matchesSearch && matchesIndustry;
   });
@@ -152,14 +162,15 @@ export default function Mentorship() {
               <SelectTrigger>
                 <div className="flex items-center">
                   <Filter className="h-4 w-4 mr-2" />
-                  <span>{industryFilter === "all" ? "All Industries" : industryFilter.charAt(0).toUpperCase() + industryFilter.slice(1)}</span>
+                  <span>{industryOptions.find(option => option.value === industryFilter)?.label || "All Industries"}</span>
                 </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Industries</SelectItem>
-                <SelectItem value="tech">Tech</SelectItem>
-                <SelectItem value="finance">Finance</SelectItem>
-                <SelectItem value="marketing">Marketing</SelectItem>
+                {industryOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -168,52 +179,59 @@ export default function Mentorship() {
         {/* Available mentors */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Available Mentors</h2>
-          <div className="grid grid-cols-1 gap-4">
-            {filteredMentors.map((mentor) => (
-              <Card key={mentor.id} className="overflow-hidden border-alumni-100">
-                <div className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    {/* Mentor Info */}
-                    <div className="flex items-start space-x-4">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src="" />
-                        <AvatarFallback className="bg-alumni-300 text-white">
-                          <User className="h-5 w-5" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="font-semibold text-lg">{mentor.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {mentor.position} at {mentor.company}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {mentor.experience} of experience • {mentor.availability}
-                        </p>
+          {filteredMentors.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4">
+              {filteredMentors.map((mentor) => (
+                <Card key={mentor.id} className="overflow-hidden border-alumni-100">
+                  <div className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-start gap-6">
+                      {/* Mentor Info */}
+                      <div className="flex items-start space-x-4">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src="" />
+                          <AvatarFallback className="bg-alumni-300 text-white">
+                            <User className="h-5 w-5" />
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <h3 className="font-semibold text-lg">{mentor.name}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {mentor.position} at {mentor.company}
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {mentor.experience} of experience • {mentor.availability}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {mentor.expertise.map((skill, index) => (
-                          <Badge key={index} variant="secondary" className="bg-alumni-100">
-                            {skill}
-                          </Badge>
-                        ))}
+                      
+                      <div className="flex-1">
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          {mentor.expertise.map((skill, index) => (
+                            <Badge key={index} variant="secondary" className="bg-alumni-100">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                        <p className="text-sm text-muted-foreground">{mentor.bio}</p>
                       </div>
-                      <p className="text-sm text-muted-foreground">{mentor.bio}</p>
+                      
+                      <Button 
+                        className="bg-alumni-400 hover:bg-alumni-500 mt-4 md:mt-0 md:self-start whitespace-nowrap"
+                        onClick={() => handleJoinProgram(mentor.id)}
+                      >
+                        Request Mentorship
+                      </Button>
                     </div>
-                    
-                    <Button 
-                      className="bg-alumni-400 hover:bg-alumni-500 mt-4 md:mt-0 md:self-start whitespace-nowrap"
-                      onClick={() => handleJoinProgram(mentor.id)}
-                    >
-                      Request Mentorship
-                    </Button>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="p-8 text-center text-muted-foreground">
+              <p>No mentors found matching your search criteria.</p>
+              <p className="mt-2">Try adjusting your filters or search terms.</p>
+            </Card>
+          )}
         </div>
       </div>
     </DashboardLayout>
