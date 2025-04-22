@@ -16,6 +16,8 @@ import Mentorship from "./pages/Mentorship";
 import Career from "./pages/Career";
 import Placement from "./pages/Placement";
 import Academic from "./pages/Academic";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import About from "./pages/About";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
@@ -81,6 +83,22 @@ const App = () => (
               element={
                 <ProtectedRoute allowedRoles={['student', 'faculty']}>
                   <Academic />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
                 </ProtectedRoute>
               }
             />

@@ -1,3 +1,6 @@
+
+import { Dispatch, SetStateAction } from "react";
+
 export type UserRole = 'student' | 'alumni' | 'faculty';
 
 export interface User {
@@ -5,15 +8,16 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
-  graduationYear: string;
-  field: string;
+  avatar?: string;
+  graduationYear?: string;
+  field?: string;
   company?: string;
   position?: string;
-  avatar?: string;
-  department?: string; // For faculty
+  department?: string;
+  bio?: string;
 }
 
 export interface UserContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: Dispatch<SetStateAction<User | null>>;
 }

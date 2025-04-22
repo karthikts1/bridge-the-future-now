@@ -125,7 +125,7 @@ export default function Login() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-academic-600 hover:bg-academic-700 text-white font-medium"
+                  className="w-full bg-academic-600 hover:bg-academic-700 text-white font-medium py-2 text-base"
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing in..." : "Sign In"}
