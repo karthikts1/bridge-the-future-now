@@ -61,7 +61,7 @@ const mockMentors = [
 
 export default function Mentorship() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [industryFilter, setIndustryFilter] = useState("");
+  const [industryFilter, setIndustryFilter] = useState("all");
   const { toast } = useToast();
 
   const handleJoinProgram = (mentorId: string) => {
@@ -80,7 +80,9 @@ export default function Mentorship() {
       mentor.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
       mentor.expertise.some(e => e.toLowerCase().includes(searchQuery.toLowerCase()));
       
-    const matchesIndustry = industryFilter === "" || mentor.company.toLowerCase().includes(industryFilter.toLowerCase());
+    const matchesIndustry = 
+      industryFilter === "all" || 
+      mentor.company.toLowerCase().includes(industryFilter.toLowerCase());
     
     return matchesSearch && matchesIndustry;
   });
@@ -150,11 +152,11 @@ export default function Mentorship() {
               <SelectTrigger>
                 <div className="flex items-center">
                   <Filter className="h-4 w-4 mr-2" />
-                  <span>{industryFilter || "Filter Industry"}</span>
+                  <span>{industryFilter === "all" ? "All Industries" : industryFilter.charAt(0).toUpperCase() + industryFilter.slice(1)}</span>
                 </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Industries</SelectItem>
+                <SelectItem value="all">All Industries</SelectItem>
                 <SelectItem value="tech">Tech</SelectItem>
                 <SelectItem value="finance">Finance</SelectItem>
                 <SelectItem value="marketing">Marketing</SelectItem>
