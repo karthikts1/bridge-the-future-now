@@ -49,12 +49,17 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
     }
   }, [user, setUser, navigate, isAuthenticated, toast, location]);
 
-  if (!isAuthenticated || !user) {
+  // Wait for user data to load before rendering
+  if (isAuthenticated && !user) {
+    return null; // Show nothing while loading user data from localStorage
+  }
+
+  if (!isAuthenticated) {
     // Save the current location they were trying to go to
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     toast({
       title: "Access denied",
       description: `You need ${allowedRoles.join(' or ')} permissions to access this page`,
