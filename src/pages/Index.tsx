@@ -64,6 +64,11 @@ export default function Index() {
               <p className="text-muted-foreground">
                 Connect with graduates from your school who are working in your field of interest.
               </p>
+              <div className="mt-4">
+                <Link to="/services">
+                  <Button variant="outline" className="mt-2">Learn More</Button>
+                </Link>
+              </div>
             </div>
             
             <div className="flex flex-col items-center text-center p-6 rounded-lg border border-accent/50 hover:border-accent hover:shadow-md transition-all">
@@ -74,6 +79,11 @@ export default function Index() {
               <p className="text-muted-foreground">
                 Participate in conversations about academic interests, career paths, and campus life.
               </p>
+              <div className="mt-4">
+                <Link to="/services">
+                  <Button variant="outline" className="mt-2">Learn More</Button>
+                </Link>
+              </div>
             </div>
             
             <div className="flex flex-col items-center text-center p-6 rounded-lg border border-accent/50 hover:border-accent hover:shadow-md transition-all">
@@ -84,6 +94,11 @@ export default function Index() {
               <p className="text-muted-foreground">
                 Get advice from professionals who have walked your path before.
               </p>
+              <div className="mt-4">
+                <Link to="/services">
+                  <Button variant="outline" className="mt-2">Learn More</Button>
+                </Link>
+              </div>
             </div>
             
             <div className="flex flex-col items-center text-center p-6 rounded-lg border border-accent/50 hover:border-accent hover:shadow-md transition-all">
@@ -94,6 +109,11 @@ export default function Index() {
               <p className="text-muted-foreground">
                 Access job postings and internships shared exclusively by alumni.
               </p>
+              <div className="mt-4">
+                <Link to="/services">
+                  <Button variant="outline" className="mt-2">Learn More</Button>
+                </Link>
+              </div>
             </div>
             
             <div className="flex flex-col items-center text-center p-6 rounded-lg border border-accent/50 hover:border-accent hover:shadow-md transition-all">
@@ -104,6 +124,11 @@ export default function Index() {
               <p className="text-muted-foreground">
                 Develop lasting professional relationships through structured mentorship.
               </p>
+              <div className="mt-4">
+                <Link to="/services">
+                  <Button variant="outline" className="mt-2">Learn More</Button>
+                </Link>
+              </div>
             </div>
             
             <div className="flex flex-col items-center text-center p-6 rounded-lg border border-accent/50 hover:border-accent hover:shadow-md transition-all">
@@ -114,6 +139,11 @@ export default function Index() {
               <p className="text-muted-foreground">
                 Get help with studies from alumni who excelled in your field.
               </p>
+              <div className="mt-4">
+                <Link to="/services">
+                  <Button variant="outline" className="mt-2">Learn More</Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

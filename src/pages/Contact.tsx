@@ -4,21 +4,43 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/hooks/use-toast";
-import { Mail, Phone, MessageSquare } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
+import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [submitting, setSubmitting] = useState(false);
+  const { toast } = useToast();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setSubmitting(true);
+    
+    // Validate form
+    if (!name || !email || !message) {
+      toast({
+        title: "Error",
+        description: "Please fill out all required fields",
+        variant: "destructive",
+      });
+      setSubmitting(false);
+      return;
+    }
+    
+    if (!email.includes('@') || !email.includes('.')) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      setSubmitting(false);
+      return;
+    }
     
     // Simulate form submission
     setTimeout(() => {
@@ -32,80 +54,86 @@ export default function Contact() {
       setEmail("");
       setSubject("");
       setMessage("");
-      setIsSubmitting(false);
+      setSubmitting(false);
     }, 1000);
   };
-  
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-alumni-800 to-alumni-900 text-white py-16">
-          <div className="container px-4 mx-auto text-center">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">Contact Us</h1>
-            <p className="text-lg text-alumni-100 max-w-2xl mx-auto">
-              Have questions or suggestions? We'd love to hear from you.
+      {/* Hero Section */}
+      <section className="relative py-14 bg-accent/30">
+        <div className="container px-4 mx-auto max-w-6xl">
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">
+              Contact Us
+            </h1>
+            <p className="text-lg text-muted-foreground mb-4">
+              Have questions or need support? We're here to help.
             </p>
           </div>
-        </section>
-        
-        {/* Contact Form Section */}
-        <section className="py-16">
-          <div className="container px-4 mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Contact Information */}
-              <div className="lg:col-span-1 space-y-6">
-                <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
+        </div>
+      </section>
+      
+      {/* Contact Section */}
+      <section className="py-16">
+        <div className="container px-4 mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="col-span-1 lg:col-span-1">
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-xl font-semibold mb-4 text-primary">Get in Touch</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Fill out the form or contact us directly using the information below.
+                  </p>
+                </div>
                 
-                <Card>
-                  <CardContent className="p-6 flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-alumni-100 flex items-center justify-center mr-4">
-                      <Mail className="h-5 w-5 text-alumni-500" />
+                <div className="space-y-4">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 mr-4 bg-accent p-3 rounded-full">
+                      <Mail className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Email</h3>
-                      <p className="text-muted-foreground">info@alumniconnect.edu</p>
+                      <h4 className="font-medium">Email</h4>
+                      <p className="text-muted-foreground">support@alumniconnect.com</p>
                     </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="p-6 flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-alumni-100 flex items-center justify-center mr-4">
-                      <Phone className="h-5 w-5 text-alumni-500" />
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 mr-4 bg-accent p-3 rounded-full">
+                      <Phone className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Phone</h3>
+                      <h4 className="font-medium">Phone</h4>
                       <p className="text-muted-foreground">+1 (555) 123-4567</p>
                     </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="p-6 flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-alumni-100 flex items-center justify-center mr-4">
-                      <MessageSquare className="h-5 w-5 text-alumni-500" />
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 mr-4 bg-accent p-3 rounded-full">
+                      <MapPin className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Live Support</h3>
-                      <p className="text-muted-foreground">Available Monday-Friday, 9am-5pm</p>
+                      <h4 className="font-medium">Address</h4>
+                      <p className="text-muted-foreground">
+                        123 University Ave<br />
+                        Suite 456<br />
+                        San Francisco, CA 94107
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
-              
-              {/* Contact Form */}
-              <div className="lg:col-span-2">
-                <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            </div>
+            
+            <div className="col-span-1 lg:col-span-2">
+              <div className="bg-white p-6 rounded-lg border border-accent/40 shadow-md">
+                <h3 className="text-xl font-semibold mb-4 text-primary">Send Us a Message</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="text-sm font-medium">
-                        Full Name
-                      </label>
+                      <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
                       <Input
                         id="name"
                         value={name}
@@ -114,99 +142,66 @@ export default function Contact() {
                         required
                       />
                     </div>
-                    
                     <div className="space-y-2">
-                      <label htmlFor="email" className="text-sm font-medium">
-                        Email Address
-                      </label>
+                      <Label htmlFor="email">Email Address <span className="text-red-500">*</span></Label>
                       <Input
                         id="email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="johndoe@example.com"
+                        placeholder="john@example.com"
                         required
                       />
                     </div>
                   </div>
                   
                   <div className="space-y-2">
-                    <label htmlFor="subject" className="text-sm font-medium">
-                      Subject
-                    </label>
+                    <Label htmlFor="subject">Subject</Label>
                     <Input
                       id="subject"
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
-                      placeholder="How can we help?"
-                      required
+                      placeholder="How can we help you?"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm font-medium">
-                      Message
-                    </label>
+                    <Label htmlFor="message">Message <span className="text-red-500">*</span></Label>
                     <Textarea
                       id="message"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Please describe your inquiry in detail..."
-                      rows={6}
+                      placeholder="Please describe your question or concern..."
+                      rows={5}
                       required
                     />
                   </div>
                   
                   <Button 
                     type="submit" 
-                    className="w-full md:w-auto bg-alumni-500 hover:bg-alumni-600"
-                    disabled={isSubmitting}
+                    variant="bright" 
+                    className="w-full sm:w-auto shadow-md"
+                    disabled={submitting}
                   >
-                    {isSubmitting ? "Sending..." : "Send Message"}
+                    {submitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </div>
             </div>
           </div>
-        </section>
-        
-        {/* FAQ Section */}
-        <section className="py-16 bg-alumni-50">
-          <div className="container px-4 mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-12">Frequently Asked Questions</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-bold mb-2">How do I become a mentor?</h3>
-                  <p className="text-muted-foreground">Alumni can apply to become mentors through their dashboard once logged in. Look for the "Become a Mentor" button in the Mentorship section.</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-bold mb-2">Is there a mobile app available?</h3>
-                  <p className="text-muted-foreground">Currently, AlumniConnect is available as a responsive web application. A dedicated mobile app is in development for both iOS and Android.</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-bold mb-2">How can I post job opportunities?</h3>
-                  <p className="text-muted-foreground">Alumni can share job opportunities through the Career section of their dashboard. These postings will be visible to students in relevant fields.</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-bold mb-2">Can I join if I'm still a student?</h3>
-                  <p className="text-muted-foreground">Yes! AlumniConnect is designed for both current students and alumni. Students can access mentorship, career guidance, and networking opportunities.</p>
-                </CardContent>
-              </Card>
+        </div>
+      </section>
+      
+      {/* Map Section (placeholder) */}
+      <section className="py-8">
+        <div className="container px-4 mx-auto max-w-6xl">
+          <div className="rounded-lg overflow-hidden border border-accent/40 h-64 bg-accent/10 flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-muted-foreground">Interactive Map Would Display Here</p>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
       
       <Footer />
     </div>

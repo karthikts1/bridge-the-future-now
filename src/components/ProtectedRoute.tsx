@@ -1,6 +1,6 @@
 
 import { ReactNode, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
 import { UserRole } from '@/types/user';
 import { useToast } from '@/components/ui/use-toast';
@@ -13,6 +13,7 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
@@ -28,7 +29,7 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
           // If parsing fails, clear localStorage
           localStorage.removeItem("userData");
           localStorage.removeItem("isAuthenticated");
-          navigate("/login");
+          navigate("/login", { state: { from: location } });
           toast({
             title: "Session expired",
             description: "Your session has expired. Please sign in again.",
@@ -38,7 +39,7 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
       } else {
         // If no user data, redirect to login
         localStorage.removeItem("isAuthenticated");
-        navigate("/login");
+        navigate("/login", { state: { from: location } });
         toast({
           title: "Authentication required",
           description: "Please sign in to access this page",
@@ -46,10 +47,11 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
         });
       }
     }
-  }, [user, setUser, navigate, isAuthenticated, toast]);
+  }, [user, setUser, navigate, isAuthenticated, toast, location]);
 
   if (!isAuthenticated || !user) {
-    return <Navigate to="/login" replace />;
+    // Save the current location they were trying to go to
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {

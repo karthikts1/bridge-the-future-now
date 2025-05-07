@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Menu, User, LogIn, LogOut } from "lucide-react";
@@ -29,10 +29,18 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const location = useLocation();
 
   const isAuthenticated = propIsAuthenticated !== undefined 
     ? propIsAuthenticated 
     : (localStorage.getItem("isAuthenticated") === "true" && user !== null);
+
+  // Function to check if a link is active
+  const isActive = (path: string) => {
+    if (path === "/" && location.pathname === "/") return true;
+    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
@@ -58,16 +66,36 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
         </Link>
         
         <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium text-white hover:text-white/90 transition-colors">
+          <Link 
+            to="/" 
+            className={`text-sm font-medium transition-colors ${
+              isActive("/") ? "text-white font-bold" : "text-white/90 hover:text-white"
+            }`}
+          >
             Home
           </Link>
-          <Link to="/about" className="text-sm font-medium text-white hover:text-white/90 transition-colors">
+          <Link 
+            to="/about" 
+            className={`text-sm font-medium transition-colors ${
+              isActive("/about") ? "text-white font-bold" : "text-white/90 hover:text-white"
+            }`}
+          >
             About Us
           </Link>
-          <Link to="/features" className="text-sm font-medium text-white hover:text-white/90 transition-colors">
-            Features
+          <Link 
+            to="/services" 
+            className={`text-sm font-medium transition-colors ${
+              isActive("/services") ? "text-white font-bold" : "text-white/90 hover:text-white"
+            }`}
+          >
+            Services
           </Link>
-          <Link to="/contact" className="text-sm font-medium text-white hover:text-white/90 transition-colors">
+          <Link 
+            to="/contact" 
+            className={`text-sm font-medium transition-colors ${
+              isActive("/contact") ? "text-white font-bold" : "text-white/90 hover:text-white"
+            }`}
+          >
             Contact
           </Link>
         </nav>
@@ -91,6 +119,9 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/dashboard" className="cursor-pointer w-full">Dashboard</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard/profile" className="cursor-pointer w-full">Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
@@ -138,28 +169,28 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
               <div className="flex flex-col space-y-4 mt-8">
                 <Link 
                   to="/" 
-                  className="text-base font-medium" 
+                  className={`text-base font-medium ${isActive("/") ? "text-primary" : ""}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Home
                 </Link>
                 <Link 
                   to="/about" 
-                  className="text-base font-medium"
+                  className={`text-base font-medium ${isActive("/about") ? "text-primary" : ""}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   About Us
                 </Link>
                 <Link 
-                  to="/features" 
-                  className="text-base font-medium"
+                  to="/services" 
+                  className={`text-base font-medium ${isActive("/services") ? "text-primary" : ""}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Features
+                  Services
                 </Link>
                 <Link 
                   to="/contact" 
-                  className="text-base font-medium"
+                  className={`text-base font-medium ${isActive("/contact") ? "text-primary" : ""}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Contact
