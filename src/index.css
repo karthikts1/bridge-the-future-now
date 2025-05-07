@@ -104,4 +104,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Enhanced button styling for better visibility */
+  .btn-highlight {
+    @apply shadow-lg border-2 border-white/20 font-semibold;
+  }
 }

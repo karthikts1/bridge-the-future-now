@@ -86,9 +86,9 @@ export default function Login() {
       <Navbar />
       <main className="flex-1 py-12">
         <div className="container max-w-md mx-auto">
-          <Card className="border-academic-100 shadow-md">
+          <Card className="border-accent/50 shadow-lg">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+              <CardTitle className="text-2xl font-bold text-center text-primary">Login</CardTitle>
               <CardDescription className="text-center">
                 Enter your credentials to access your account
               </CardDescription>
@@ -135,7 +135,8 @@ export default function Login() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-academic-600 hover:bg-academic-700 text-white font-medium py-2 text-base"
+                  variant="bright"
+                  className="w-full py-2 text-base shadow-md"
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing in..." : "Sign In"}

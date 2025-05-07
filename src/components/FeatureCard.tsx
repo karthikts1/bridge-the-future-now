@@ -22,7 +22,7 @@ export function FeatureCard({ icon, title, description, linkTo, buttonText }: Fe
       <Link to={linkTo}>
         <Button 
           variant="bright"
-          className="w-full font-medium"
+          className="w-full font-medium shadow-md"
         >
           {buttonText}
         </Button>

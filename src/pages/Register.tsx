@@ -95,9 +95,9 @@ export default function Register() {
       <Navbar />
       <main className="flex-1 py-12">
         <div className="container max-w-md mx-auto">
-          <Card className="border-alumni-100 shadow-md">
+          <Card className="border-accent/50 shadow-lg">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold text-center">Register</CardTitle>
+              <CardTitle className="text-2xl font-bold text-center text-primary">Register</CardTitle>
               <CardDescription className="text-center">
                 Create an account to connect with alumni and students
               </CardDescription>
@@ -194,7 +194,8 @@ export default function Register() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-alumni-400 hover:bg-alumni-500"
+                  variant="bright"
+                  className="w-full shadow-md"
                   disabled={isLoading}
                 >
                   {isLoading ? "Creating account..." : "Create Account"}
@@ -204,7 +205,7 @@ export default function Register() {
             <CardFooter className="flex flex-col space-y-4">
               <div className="text-sm text-muted-foreground text-center">
                 Already have an account?{" "}
-                <Link to="/login" className="text-alumni-500 hover:text-alumni-600 font-medium">
+                <Link to="/login" className="text-academic-500 hover:text-academic-600 font-medium">
                   Sign in
                 </Link>
               </div>

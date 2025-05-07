@@ -22,12 +22,12 @@ export default function Index() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link to="/register">
-                <Button className="bg-secondary hover:bg-secondary/80 text-white text-lg px-6 py-6 h-auto font-semibold">
+                <Button variant="bright" className="text-lg px-6 py-6 h-auto shadow-lg">
                   Join the Network
                 </Button>
               </Link>
               <Link to="/login">
-                <Button variant="outline" className="text-lg px-6 py-6 h-auto border-white text-white hover:bg-white/10">
+                <Button variant="contrast" className="text-lg px-6 py-6 h-auto shadow-lg hover:bg-white/90">
                   Sign In
                 </Button>
               </Link>
@@ -129,12 +129,12 @@ export default function Index() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register">
-                <Button className="bg-secondary hover:bg-secondary/90 px-8 py-6 h-auto text-white font-semibold">
+                <Button variant="bright" className="px-8 py-6 h-auto text-white shadow-lg">
                   Create an Account
                 </Button>
               </Link>
               <Link to="/login">
-                <Button variant="outline" className="px-8 py-6 h-auto border-primary text-primary hover:bg-primary/10">
+                <Button variant="contrast" className="px-8 py-6 h-auto border-primary shadow-lg hover:bg-white/90">
                   Sign In
                 </Button>
               </Link>
