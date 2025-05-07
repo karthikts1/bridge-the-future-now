@@ -13,15 +13,15 @@ interface FeatureCardProps {
 
 export function FeatureCard({ icon, title, description, linkTo, buttonText }: FeatureCardProps) {
   return (
-    <div className="group rounded-lg border border-academic-muted/20 bg-white p-6 shadow-lg transition-all hover:shadow-xl">
-      <div className="mb-4 inline-block rounded-full bg-academic-light p-3 text-academic-primary group-hover:bg-academic-primary group-hover:text-white">
+    <div className="group rounded-lg border-2 border-accent bg-white p-6 shadow-md transition-all hover:shadow-xl">
+      <div className="mb-4 inline-block rounded-full bg-accent p-3 text-primary group-hover:bg-primary group-hover:text-white">
         {icon}
       </div>
-      <h3 className="mb-2 text-xl font-semibold text-academic-dark">{title}</h3>
-      <p className="mb-4 text-academic-muted">{description}</p>
+      <h3 className="mb-2 text-xl font-semibold text-primary">{title}</h3>
+      <p className="mb-4 text-muted-foreground">{description}</p>
       <Link to={linkTo}>
         <Button 
-          className="w-full bg-academic-primary hover:bg-academic-primary/90 text-white"
+          className="w-full bg-secondary hover:bg-secondary/90 text-white font-medium"
         >
           {buttonText}
         </Button>

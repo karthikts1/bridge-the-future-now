@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -53,17 +54,17 @@ export default {
           foreground: 'hsl(var(--card-foreground))'
         },
         alumni: {
-          50: '#f0f6ff',
-          100: '#90cdf4',
-          200: '#63b3ed',
-          300: '#4299e1',
-          400: '#3182ce',
-          500: '#2b6cb0',
-          600: '#2c5282',
-          700: '#2a4365',
-          800: '#1a365d',
-          900: '#1a2e4c',
-          950: '#172033',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+          950: '#172554',
         },
         sidebar: {
           DEFAULT: 'hsl(var(--sidebar-background))',
@@ -76,16 +77,16 @@ export default {
           ring: 'hsl(var(--sidebar-ring))'
         },
         academic: {
-          primary: "#1a4971",
-          secondary: "#2c3e50",
-          accent: "#e67e22",
-          muted: "#95a5a6",
-          light: "#ecf0f1",
-          dark: "#2c3e50",
-          success: "#27ae60",
-          warning: "#f39c12",
-          error: "#c0392b",
-          link: "#3498db",
+          primary: "var(--academic-primary)",
+          secondary: "var(--academic-secondary)",
+          accent: "var(--academic-accent)",
+          muted: "var(--academic-muted)",
+          light: "var(--academic-light)",
+          dark: "var(--academic-dark)",
+          success: "var(--academic-success)",
+          warning: "var(--academic-warning)",
+          error: "var(--academic-error)",
+          link: "var(--academic-link)",
         }
       },
       borderRadius: {

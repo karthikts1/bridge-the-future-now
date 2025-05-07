@@ -28,8 +28,8 @@ function SidebarItem({ icon, href, label }: SidebarItemProps) {
         cn(
           "flex items-center gap-3 rounded-lg px-3 py-2 text-base transition-all",
           isActive
-            ? "bg-alumni-100 text-alumni-500 font-medium"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+            ? "bg-primary/10 text-primary font-medium"
+            : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
         )
       }
     >
@@ -41,9 +41,9 @@ function SidebarItem({ icon, href, label }: SidebarItemProps) {
 
 export function Sidebar() {
   return (
-    <div className="flex h-full w-full flex-col gap-4">
+    <div className="flex h-full w-full flex-col gap-4 bg-background rounded-lg shadow-sm border-2 border-accent/20 p-2">
       <div className="px-3 py-2">
-        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight text-primary">
           Dashboard
         </h2>
         <div className="space-y-1">
@@ -85,8 +85,8 @@ export function Sidebar() {
         </div>
       </div>
       
-      <div className="px-3 py-2">
-        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+      <div className="px-3 py-2 border-t border-border pt-4">
+        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight text-primary">
           Account
         </h2>
         <div className="space-y-1">

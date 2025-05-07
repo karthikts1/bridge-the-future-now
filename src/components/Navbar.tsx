@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
@@ -50,23 +51,23 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-academic-primary shadow-md">
+    <header className="sticky top-0 z-50 w-full border-b bg-primary shadow-md">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
           <span className="font-bold text-2xl tracking-tight text-white">AlumniConnect</span>
         </Link>
         
         <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium text-white/90 transition-colors hover:text-white">
+          <Link to="/" className="text-sm font-medium text-white hover:text-white/90 transition-colors">
             Home
           </Link>
-          <Link to="/about" className="text-sm font-medium text-white/90 transition-colors hover:text-white">
+          <Link to="/about" className="text-sm font-medium text-white hover:text-white/90 transition-colors">
             About Us
           </Link>
-          <Link to="/features" className="text-sm font-medium text-white/90 transition-colors hover:text-white">
+          <Link to="/features" className="text-sm font-medium text-white hover:text-white/90 transition-colors">
             Features
           </Link>
-          <Link to="/contact" className="text-sm font-medium text-white/90 transition-colors hover:text-white">
+          <Link to="/contact" className="text-sm font-medium text-white hover:text-white/90 transition-colors">
             Contact
           </Link>
         </nav>
@@ -75,9 +76,9 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar className="border-2 border-academic-accent hover:border-white cursor-pointer">
+                <Avatar className="border-2 border-accent hover:border-white cursor-pointer">
                   <AvatarImage src={user?.avatar || ""} />
-                  <AvatarFallback className="bg-academic-accent text-white">
+                  <AvatarFallback className="bg-secondary text-white">
                     {getUserInitials()}
                   </AvatarFallback>
                 </Avatar>
@@ -92,7 +93,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                   <Link to="/dashboard" className="cursor-pointer w-full">Dashboard</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-red-500 cursor-pointer">
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </DropdownMenuItem>
@@ -104,7 +105,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="border-white text-white hover:bg-white hover:text-academic-primary font-medium shadow-sm"
+                  className="border-white text-white hover:bg-white hover:text-primary font-medium shadow-sm"
                 >
                   <LogIn className="h-4 w-4 mr-2" />
                   Log In
@@ -113,7 +114,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
               <Link to="/register">
                 <Button 
                   size="sm" 
-                  className="bg-white text-academic-primary hover:bg-gray-100 font-medium shadow-sm"
+                  className="bg-white text-primary hover:bg-accent hover:text-primary font-medium shadow-sm"
                 >
                   Register
                 </Button>
@@ -126,7 +127,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="text-white hover:bg-academic-primary/50"
+                className="text-white hover:bg-primary/80"
               >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
@@ -167,7 +168,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                   <div className="border-t pt-4 mt-4">
                     <div className="flex items-center space-x-3 mb-4">
                       <Avatar className="h-8 w-8">
-                        <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                        <AvatarFallback className="bg-secondary text-white">{getUserInitials()}</AvatarFallback>
                       </Avatar>
                       <div>
                         <p className="font-medium">{user?.name}</p>
@@ -210,7 +211,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                       to="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Button className="w-full bg-academic-accent hover:bg-academic-accent/90 text-white">Register</Button>
+                      <Button className="w-full bg-primary text-white">Register</Button>
                     </Link>
                   </div>
                 )}
