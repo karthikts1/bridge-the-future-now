@@ -103,9 +103,9 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
             <div className="hidden md:flex space-x-2">
               <Link to="/login">
                 <Button 
-                  variant="outline" 
+                  variant="contrast" 
                   size="sm" 
-                  className="border-white text-white hover:bg-white hover:text-primary font-medium shadow-sm"
+                  className="font-medium shadow-sm"
                 >
                   <LogIn className="h-4 w-4 mr-2" />
                   Log In
@@ -113,8 +113,9 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
               </Link>
               <Link to="/register">
                 <Button 
+                  variant="bright"
                   size="sm" 
-                  className="bg-white text-primary hover:bg-accent hover:text-primary font-medium shadow-sm"
+                  className="font-medium shadow-sm"
                 >
                   Register
                 </Button>
@@ -202,7 +203,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                       to="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Button variant="outline" className="w-full">
+                      <Button variant="bright" className="w-full">
                         <LogIn className="h-4 w-4 mr-2" />
                         Log In
                       </Button>
@@ -211,7 +212,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                       to="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Button className="w-full bg-primary text-white">Register</Button>
+                      <Button variant="bright" className="w-full">Register</Button>
                     </Link>
                   </div>
                 )}

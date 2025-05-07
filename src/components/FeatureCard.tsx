@@ -21,7 +21,8 @@ export function FeatureCard({ icon, title, description, linkTo, buttonText }: Fe
       <p className="mb-4 text-muted-foreground">{description}</p>
       <Link to={linkTo}>
         <Button 
-          className="w-full bg-secondary hover:bg-secondary/90 text-white font-medium"
+          variant="bright"
+          className="w-full font-medium"
         >
           {buttonText}
         </Button>
