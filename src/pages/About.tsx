@@ -200,7 +200,7 @@ export default function About() {
                 </Button>
               </Link>
               <Link to="/login">
-                <Button variant="outline" className="border-white text-white hover:bg-white/10">
+                <Button variant="contrast" className="px-8 py-6 h-auto border-white shadow-lg hover:bg-white/90">
                   Sign In
                 </Button>
               </Link>
