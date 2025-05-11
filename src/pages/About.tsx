@@ -195,12 +195,12 @@ export default function About() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register">
-                <Button className="bg-alumni-400 hover:bg-alumni-500 text-alumni-900">
+                <Button className="bg-alumni-400 hover:bg-alumni-500 text-alumni-900 w-full sm:w-auto">
                   Join Today
                 </Button>
               </Link>
               <Link to="/login">
-                <Button variant="contrast" className="px-8 py-6 h-auto border-white shadow-lg hover:bg-white/90">
+                <Button variant="contrast" className="px-8 py-6 h-auto border-white shadow-lg hover:bg-orange-600 hover:text-white w-full sm:w-auto">
                   Sign In
                 </Button>
               </Link>
