@@ -196,9 +196,13 @@ export default function Contact() {
       <section className="py-8">
         <div className="container px-4 mx-auto max-w-6xl">
           <div className="rounded-lg overflow-hidden border border-accent/40 h-64 bg-accent/10 flex items-center justify-center">
-            <div className="text-center">
-              <p className="text-muted-foreground">Interactive Map Would Display Here</p>
-            </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62251.89924627136!2d77.515821!3d13.133874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1f1f4e2c0b3b%3A0x4e8b0e2e0a0b0e2e!2sBMS%20Institute%20of%20Technology%20and%20Management!5e0!3m2!1sen!2sin!4v1715501513891!5m2!1sen!2sin"
+                    className="w-full h-64 border-0"
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="BMSIT Location">
+            </iframe>
           </div>
         </div>
       </section>
