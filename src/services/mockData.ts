@@ -1,240 +1,39 @@
 
 import { User } from '@/types/user';
 import { courses } from '@/data/coursesData';
+import alumniCSV from '@/data/alumni.csv?raw';
+import studentsCSV from '@/data/students.csv?raw';
+import facultyCSV from '@/data/faculty.csv?raw';
 
-export const mockAlumni: User[] = [
-  {
-    id: '1',
-    name: 'Dr. Sarah Chen',
-    email: 'sarah.chen@alumni.edu',
-    role: 'alumni',
-    graduationYear: '2015',
-    field: 'Computer Science',
-    company: 'Google',
-    position: 'Senior Software Engineer',
-    avatar: '/avatars/sarah.jpg',
-    bio: 'Specializing in machine learning and AI applications. Passionate about mentoring new graduates.',
-    courses: ['cs101', 'cs201']
-  },
-  {
-    id: '2',
-    name: 'Prof. James Wilson',
-    email: 'j.wilson@research.edu',
-    role: 'alumni',
-    graduationYear: '2010',
-    field: 'Electrical Engineering',
-    company: 'Tesla',
-    position: 'Lead Engineer',
-    avatar: '/avatars/james.jpg',
-    bio: 'Working on electric vehicle innovations. Previously taught circuit design at University.',
-    courses: ['phys101', 'phys201']
-  },
-  {
-    id: '3',
-    name: 'Dr. Emily Rodriguez',
-    email: 'e.rodriguez@tech.com',
-    role: 'alumni',
-    graduationYear: '2012',
-    field: 'Electronics',
-    company: 'Apple',
-    position: 'Research Scientist',
-    avatar: '/avatars/emily.jpg',
-    bio: 'Developing next-generation display technologies. PhD in Optoelectronics.',
-    courses: ['phys201', 'math201']
-  },
-  {
-    id: '4',
-    name: 'Michael Chang',
-    email: 'michael.c@fintech.com',
-    role: 'alumni',
-    graduationYear: '2018',
-    field: 'Mathematics',
-    company: 'Bloomberg',
-    position: 'Quantitative Analyst',
-    bio: 'Applying mathematical models to financial markets. Passionate about data science.',
-    courses: ['math101', 'math201']
-  },
-  {
-    id: '5',
-    name: 'Dr. Priya Sharma',
-    email: 'p.sharma@biotech.org',
-    role: 'alumni',
-    graduationYear: '2014',
-    field: 'Biology',
-    company: 'Genentech',
-    position: 'Senior Researcher',
-    bio: 'Leading research in gene therapy applications. Published in Nature Biotechnology.',
-    courses: ['bio101', 'chem101']
-  },
-  {
-    id: '6',
-    name: 'Thomas Wright',
-    email: 't.wright@education.org',
-    role: 'alumni',
-    graduationYear: '2016',
-    field: 'English',
-    company: 'Oxford University Press',
-    position: 'Senior Editor',
-    bio: 'Specializing in academic publishing and digital learning materials.',
-    courses: ['eng101', 'hist101']
-  }
-];
+// CSV parsing function
+const parseCSV = (csv: string): any[] => {
+  const lines = csv.split('\n');
+  const headers = lines[0].split(',');
+  
+  return lines.slice(1).filter(line => line.trim()).map(line => {
+    const values = line.split(',');
+    const entry: any = {};
+    
+    headers.forEach((header, index) => {
+      let value = values[index];
+      
+      // Handle special cases
+      if (header === 'courses') {
+        entry[header] = value ? value.split('|') : [];
+      } else if (value === '') {
+        entry[header] = undefined;
+      } else {
+        entry[header] = value;
+      }
+    });
+    
+    return entry;
+  });
+};
 
-export const mockStudents: User[] = [
-  {
-    id: '7',
-    name: 'Alex Kumar',
-    email: 'alex.k@student.edu',
-    role: 'student',
-    graduationYear: '2024',
-    field: 'Computer Science',
-    bio: 'Passionate about app development and AI. Looking for internship opportunities.',
-    courses: ['cs101']
-  },
-  {
-    id: '8',
-    name: 'Maria Santos',
-    email: 'm.santos@student.edu',
-    role: 'student',
-    graduationYear: '2025',
-    field: 'Electronics',
-    bio: 'Working on IoT projects. Interested in embedded systems.',
-    courses: ['phys101']
-  },
-  {
-    id: '9',
-    name: 'John Smith',
-    email: 'j.smith@student.edu',
-    role: 'student',
-    graduationYear: '2024',
-    field: 'Electrical Engineering',
-    bio: 'Focus on renewable energy systems. Member of the Solar Car team.',
-    courses: ['phys201']
-  },
-  {
-    id: '10',
-    name: 'Wei Zhang',
-    email: 'wei.z@student.edu',
-    role: 'student',
-    graduationYear: '2026',
-    field: 'Mathematics',
-    bio: 'Interested in cryptography and data security. Math competition winner.',
-    courses: ['math101', 'math201']
-  },
-  {
-    id: '11',
-    name: 'Isabella Rodriguez',
-    email: 'i.rodriguez@student.edu',
-    role: 'student',
-    graduationYear: '2025',
-    field: 'Biology',
-    bio: 'Pre-med student researching neurodegenerative diseases.',
-    courses: ['bio101']
-  },
-  {
-    id: '12',
-    name: 'Jamal Washington',
-    email: 'j.washington@student.edu',
-    role: 'student',
-    graduationYear: '2024',
-    field: 'Chemistry',
-    bio: 'Researching sustainable materials. Aspires to work in green chemistry.',
-    courses: ['chem101']
-  },
-  {
-    id: '13',
-    name: 'Emma Chen',
-    email: 'e.chen@student.edu',
-    role: 'student',
-    graduationYear: '2026',
-    field: 'English',
-    bio: 'Editor of student literary magazine. Aspiring technical writer.',
-    courses: ['eng101']
-  },
-  {
-    id: '14',
-    name: 'Omar Patel',
-    email: 'o.patel@student.edu',
-    role: 'student',
-    graduationYear: '2025',
-    field: 'History',
-    bio: 'Researching digital archives and historical data visualization.',
-    courses: ['hist101']
-  }
-];
-
-export const mockFaculty: User[] = [
-  {
-    id: '15',
-    name: 'Prof. Robert Johnson',
-    email: 'r.johnson@faculty.edu',
-    role: 'faculty',
-    department: 'Computer Science',
-    position: 'Department Chair',
-    bio: 'Leading research in distributed systems. 20+ years teaching experience.',
-    courses: ['cs101', 'cs201']
-  },
-  {
-    id: '16',
-    name: 'Dr. Lisa Wong',
-    email: 'l.wong@faculty.edu',
-    role: 'faculty',
-    department: 'Physics',
-    position: 'Associate Professor',
-    bio: 'Specializing in quantum physics. Lab director for advanced materials.',
-    courses: ['phys101', 'phys201']
-  },
-  {
-    id: '17',
-    name: 'Prof. David Martinez',
-    email: 'd.martinez@faculty.edu',
-    role: 'faculty',
-    department: 'Mathematics',
-    position: 'Professor',
-    bio: 'Research focus on applied mathematics and computational modeling.',
-    courses: ['math101', 'math201']
-  },
-  {
-    id: '18',
-    name: 'Dr. Amara Okafor',
-    email: 'a.okafor@faculty.edu',
-    role: 'faculty',
-    department: 'Biology',
-    position: 'Assistant Professor',
-    bio: 'Leading research in genomics and molecular biology.',
-    courses: ['bio101']
-  },
-  {
-    id: '19',
-    name: 'Prof. Henry Wilson',
-    email: 'h.wilson@faculty.edu',
-    role: 'faculty',
-    department: 'Chemistry',
-    position: 'Professor Emeritus',
-    bio: 'Award-winning educator with focus on organic chemistry.',
-    courses: ['chem101']
-  },
-  {
-    id: '20',
-    name: 'Dr. Eleanor Brooks',
-    email: 'e.brooks@faculty.edu',
-    role: 'faculty',
-    department: 'English',
-    position: 'Associate Professor',
-    bio: 'Specializing in technical communication and digital rhetoric.',
-    courses: ['eng101']
-  },
-  {
-    id: '21',
-    name: 'Prof. Carlos Rivera',
-    email: 'c.rivera@faculty.edu',
-    role: 'faculty',
-    department: 'History',
-    position: 'Professor',
-    bio: 'Expert in digital humanities and computational history methods.',
-    courses: ['hist101']
-  }
-];
+export const mockAlumni: User[] = parseCSV(alumniCSV);
+export const mockStudents: User[] = parseCSV(studentsCSV);
+export const mockFaculty: User[] = parseCSV(facultyCSV);
 
 export const getRecommendedAlumni = (studentField: string) => {
   return mockAlumni.filter(alumni => alumni.field === studentField);
@@ -252,3 +51,23 @@ export const getRelatedFaculty = (courseIds: string[]) => {
   );
 };
 
+// New helper functions for enhanced data access
+export const getAllUsers = (): User[] => {
+  return [...mockAlumni, ...mockStudents, ...mockFaculty];
+};
+
+export const getUserById = (id: string): User | undefined => {
+  return getAllUsers().find(user => user.id === id);
+};
+
+export const getUsersByField = (field: string): User[] => {
+  return getAllUsers().filter(user => user.field === field);
+};
+
+export const getAlumniByCompany = (company: string): User[] => {
+  return mockAlumni.filter(alumni => alumni.company?.toLowerCase().includes(company.toLowerCase()));
+};
+
+export const getFacultyByDepartment = (department: string): User[] => {
+  return mockFaculty.filter(faculty => faculty.department?.toLowerCase() === department.toLowerCase());
+};

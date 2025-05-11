@@ -1,0 +1,14 @@
+
+id,name,email,role,department,position,bio,courses
+15,Prof. Robert Johnson,r.johnson@faculty.edu,faculty,Computer Science,Department Chair,"Leading research in distributed systems. 20+ years teaching experience.",cs101|cs201
+16,Dr. Lisa Wong,l.wong@faculty.edu,faculty,Physics,Associate Professor,"Specializing in quantum physics. Lab director for advanced materials.",phys101|phys201
+17,Prof. David Martinez,d.martinez@faculty.edu,faculty,Mathematics,Professor,"Research focus on applied mathematics and computational modeling.",math101|math201
+18,Dr. Amara Okafor,a.okafor@faculty.edu,faculty,Biology,Assistant Professor,"Leading research in genomics and molecular biology.",bio101
+19,Prof. Henry Wilson,h.wilson@faculty.edu,faculty,Chemistry,Professor Emeritus,"Award-winning educator with focus on organic chemistry.",chem101
+20,Dr. Eleanor Brooks,e.brooks@faculty.edu,faculty,English,Associate Professor,"Specializing in technical communication and digital rhetoric.",eng101
+21,Prof. Carlos Rivera,c.rivera@faculty.edu,faculty,History,Professor,"Expert in digital humanities and computational history methods.",hist101
+22,Dr. Samira Khan,s.khan@faculty.edu,faculty,Computer Science,Assistant Professor,"AI ethics researcher. Previously worked at DeepMind.",cs201
+23,Prof. Michael Chen,m.chen@faculty.edu,faculty,Electronics,Professor,"Pioneering work in flexible display technology. 15 patents filed.",phys201
+24,Dr. Fatima Al-Farsi,f.alfarsi@faculty.edu,faculty,Mathematics,Associate Professor,"Number theory specialist. Author of three textbooks.",math201
+25,Prof. James Wilson,j.wilson@faculty.edu,faculty,Biology,Department Chair,"Genetic research focus. NIH grant recipient for 10 consecutive years.",bio101
+26,Dr. Sarah Johnson,s.johnson@faculty.edu,faculty,Chemistry,Professor,"Green chemistry advocate. Developed eco-friendly lab protocols.",chem101

@@ -1,0 +1,16 @@
+
+id,name,email,role,graduationYear,field,bio,courses
+7,Alex Kumar,alex.k@student.edu,student,2024,Computer Science,"Passionate about app development and AI. Looking for internship opportunities.",cs101
+8,Maria Santos,m.santos@student.edu,student,2025,Electronics,"Working on IoT projects. Interested in embedded systems.",phys101
+9,John Smith,j.smith@student.edu,student,2024,Electrical Engineering,"Focus on renewable energy systems. Member of the Solar Car team.",phys201
+10,Wei Zhang,wei.z@student.edu,student,2026,Mathematics,"Interested in cryptography and data security. Math competition winner.",math101|math201
+11,Isabella Rodriguez,i.rodriguez@student.edu,student,2025,Biology,"Pre-med student researching neurodegenerative diseases.",bio101
+12,Jamal Washington,j.washington@student.edu,student,2024,Chemistry,"Researching sustainable materials. Aspires to work in green chemistry.",chem101
+13,Emma Chen,e.chen@student.edu,student,2026,English,"Editor of student literary magazine. Aspiring technical writer.",eng101
+14,Omar Patel,o.patel@student.edu,student,2025,History,"Researching digital archives and historical data visualization.",hist101
+15,Sophia Kim,s.kim@student.edu,student,2024,Computer Science,"Developing a language learning app. Fluent in 4 languages.",cs101|cs201
+16,Raj Patel,r.patel@student.edu,student,2025,Physics,"Researching quantum computing applications. STEM scholarship recipient.",phys101|phys201
+17,Hannah Johnson,h.johnson@student.edu,student,2026,Biology,"Focused on marine biology and ocean conservation. Scuba certified.",bio101
+18,Carlos Mendez,c.mendez@student.edu,student,2024,Mathematics,"Participating in international math competitions. Tutor for underclassmen.",math101|math201
+19,Zoe Williams,z.williams@student.edu,student,2025,English,"Poet and fiction writer. Published in student literary journals.",eng101
+20,Tyler Chen,t.chen@student.edu,student,2026,Chemistry,"Researching biodegradable plastics. Environmental activism leader.",chem101
