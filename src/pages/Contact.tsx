@@ -106,7 +106,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Phone</h4>
-                      <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="text-muted-foreground">+91 123456790 </p>
                     </div>
                   </div>
                   
@@ -117,9 +117,9 @@ export default function Contact() {
                     <div>
                       <h4 className="font-medium">Address</h4>
                       <p className="text-muted-foreground">
-                        123 University Ave<br />
-                        Suite 456<br />
-                        San Francisco, CA 94107
+                        BMSIT,Doddabalapur main road,<br />
+                        Avalahalli<br />
+                       Bengaluru,560064
                       </p>
                     </div>
                   </div>
