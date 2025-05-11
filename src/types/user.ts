@@ -15,6 +15,7 @@ export interface User {
   position?: string;
   department?: string;
   bio?: string;
+  courses?: string[]; // Array of course IDs
 }
 
 export interface UserContextType {

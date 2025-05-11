@@ -8,14 +8,27 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { User, Briefcase, GraduationCap, Building } from "lucide-react";
+import { User, Briefcase, GraduationCap, Building, BookOpen } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/components/ui/use-toast";
+import { 
+  Select, 
+  SelectContent, 
+  SelectGroup,
+  SelectItem, 
+  SelectLabel,
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { courses, getDepartments, getCoursesByDepartment } from "@/data/coursesData";
+import { Badge } from "@/components/ui/badge";
 
 export default function Profile() {
   const { user, setUser } = useUser();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
+  const [selectedCourses, setSelectedCourses] = useState<string[]>(user?.courses || []);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -34,13 +47,22 @@ export default function Profile() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleCourseSelect = (courseId: string) => {
+    if (selectedCourses.includes(courseId)) {
+      setSelectedCourses(prev => prev.filter(id => id !== courseId));
+    } else {
+      setSelectedCourses(prev => [...prev, courseId]);
+    }
+  };
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Update user context
     const updatedUser = {
       ...user!,
-      ...formData
+      ...formData,
+      courses: selectedCourses
     };
     
     setUser(updatedUser);
@@ -51,6 +73,11 @@ export default function Profile() {
       title: "Profile updated",
       description: "Your profile information has been saved successfully."
     });
+  };
+
+  const getCourseNameById = (courseId: string) => {
+    const course = courses.find(c => c.id === courseId);
+    return course ? `${course.code}: ${course.name}` : "";
   };
 
   return (
@@ -111,6 +138,27 @@ export default function Profile() {
                           <span>{user?.field} • Class of {user?.graduationYear}</span>
                         </div>
                       </>
+                    )}
+
+                    {user?.courses && user.courses.length > 0 && (
+                      <div className="flex flex-col items-center text-sm mt-4">
+                        <div className="flex items-center mb-2">
+                          <BookOpen className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>Enrolled Courses</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1 justify-center">
+                          {user.courses.slice(0, 3).map(courseId => (
+                            <Badge key={courseId} variant="outline" className="text-xs">
+                              {courses.find(c => c.id === courseId)?.code || courseId}
+                            </Badge>
+                          ))}
+                          {user.courses.length > 3 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{user.courses.length - 3} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
                     )}
                   </div>
                   
@@ -240,6 +288,97 @@ export default function Profile() {
                           />
                         </div>
                       </div>
+                    )}
+
+                    {/* Course selection section */}
+                    {(user?.role === 'student' || user?.role === 'alumni') && isEditing && (
+                      <>
+                        <Separator className="my-4" />
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="courseDepartment">Course Department</Label>
+                            <Select
+                              disabled={!isEditing}
+                              value={selectedDepartment}
+                              onValueChange={setSelectedDepartment}
+                            >
+                              <SelectTrigger id="courseDepartment" className="w-full">
+                                <SelectValue placeholder="Select a department" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {getDepartments().map((dept) => (
+                                  <SelectItem key={dept} value={dept}>
+                                    {dept}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          {selectedDepartment && (
+                            <div className="space-y-2">
+                              <Label>Available Courses</Label>
+                              <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto border rounded-md p-2">
+                                {getCoursesByDepartment(selectedDepartment).map((course) => (
+                                  <div 
+                                    key={course.id} 
+                                    className={`p-2 rounded-md cursor-pointer ${
+                                      selectedCourses.includes(course.id)
+                                        ? "bg-primary/20 border-primary border"
+                                        : "border hover:bg-accent"
+                                    }`}
+                                    onClick={() => handleCourseSelect(course.id)}
+                                  >
+                                    <div className="font-medium">{course.code}: {course.name}</div>
+                                    {course.description && (
+                                      <div className="text-xs text-muted-foreground mt-1">{course.description}</div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {selectedCourses.length > 0 && (
+                            <div className="space-y-2">
+                              <Label>Selected Courses</Label>
+                              <div className="flex flex-wrap gap-2">
+                                {selectedCourses.map(courseId => (
+                                  <Badge 
+                                    key={courseId} 
+                                    variant="secondary"
+                                    className="group cursor-pointer"
+                                    onClick={() => isEditing && handleCourseSelect(courseId)}
+                                  >
+                                    {getCourseNameById(courseId)}
+                                    {isEditing && <span className="ml-1 group-hover:text-destructive">×</span>}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
+
+                    {/* Show enrolled courses when not editing */}
+                    {(user?.role === 'student' || user?.role === 'alumni') && !isEditing && user?.courses && user.courses.length > 0 && (
+                      <>
+                        <Separator className="my-4" />
+                        <div className="space-y-2">
+                          <Label>Enrolled Courses</Label>
+                          <div className="flex flex-wrap gap-2">
+                            {user.courses.map(courseId => (
+                              <Badge 
+                                key={courseId} 
+                                variant="secondary"
+                              >
+                                {getCourseNameById(courseId)}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
                   
