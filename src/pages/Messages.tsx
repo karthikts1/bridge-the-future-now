@@ -8,19 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@/contexts/UserContext";
-import { User } from "@/types/user";
+import { User, Message as MessageType } from "@/types/user";
 import { getAllUsers } from "@/services/mockData";
 import { Send, User as UserIcon } from "lucide-react";
-
-// Define message type
-interface Message {
-  id: string;
-  senderId: string;
-  receiverId: string;
-  content: string;
-  timestamp: Date;
-  read: boolean;
-}
 
 export default function Messages() {
   const { user } = useUser();
@@ -28,7 +18,7 @@ export default function Messages() {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   
   // Load users and messages from localStorage on mount
@@ -56,7 +46,7 @@ export default function Messages() {
   
   // Filter users based on search term and role access
   const filteredUsers = users.filter(u => {
-    // Fix: Add null checks for each property used in toLowerCase
+    // Add null checks for each property used in toLowerCase
     const nameMatch = u.name && searchTerm ? u.name.toLowerCase().includes(searchTerm.toLowerCase()) : true;
     const emailMatch = u.email && searchTerm ? u.email.toLowerCase().includes(searchTerm.toLowerCase()) : true;
     const matchesSearch = searchTerm ? (nameMatch || emailMatch) : true;
@@ -114,7 +104,7 @@ export default function Messages() {
   const handleSendMessage = () => {
     if (!message.trim() || !selectedUser || !user) return;
     
-    const newMessage: Message = {
+    const newMessage: MessageType = {
       id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       senderId: user.id,
       receiverId: selectedUser.id,
@@ -187,7 +177,7 @@ export default function Messages() {
                       onClick={() => setSelectedUser(contact)}
                     >
                       <Avatar className={`h-10 w-10 ${getUserRoleColor(contact.role)}`}>
-                        <AvatarImage src={contact.avatar || ""} alt={contact.name} />
+                        <AvatarImage src={contact.avatar || ""} alt={contact.name || ""} />
                         <AvatarFallback>
                           {contact.name ? contact.name.charAt(0) : "U"}
                         </AvatarFallback>
@@ -219,7 +209,7 @@ export default function Messages() {
                 <CardHeader className="py-3 border-b">
                   <div className="flex items-center gap-3">
                     <Avatar className={`h-10 w-10 ${getUserRoleColor(selectedUser.role)}`}>
-                      <AvatarImage src={selectedUser.avatar || ""} alt={selectedUser.name} />
+                      <AvatarImage src={selectedUser.avatar || ""} alt={selectedUser.name || ""} />
                       <AvatarFallback>{selectedUser.name ? selectedUser.name.charAt(0) : "U"}</AvatarFallback>
                     </Avatar>
                     <div>
@@ -243,7 +233,7 @@ export default function Messages() {
                           <div className="flex items-start gap-2 max-w-[80%]">
                             {!isSentByMe && (
                               <Avatar className={`h-8 w-8 ${getUserRoleColor(sender?.role || '')}`}>
-                                <AvatarImage src={sender?.avatar || ""} />
+                                <AvatarImage src={sender?.avatar || ""} alt={sender?.name || ""} />
                                 <AvatarFallback>
                                   {sender?.name ? sender.name.charAt(0) : <UserIcon className="h-4 w-4" />}
                                 </AvatarFallback>
@@ -265,7 +255,7 @@ export default function Messages() {
                             </div>
                             {isSentByMe && (
                               <Avatar className={`h-8 w-8 ${getUserRoleColor(user?.role || '')}`}>
-                                <AvatarImage src={user?.avatar || ""} />
+                                <AvatarImage src={user?.avatar || ""} alt={user?.name || ""} />
                                 <AvatarFallback>
                                   {user?.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
                                 </AvatarFallback>
