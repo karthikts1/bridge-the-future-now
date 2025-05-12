@@ -35,6 +35,10 @@ export const mockAlumni: User[] = parseCSV(alumniCSV);
 export const mockStudents: User[] = parseCSV(studentsCSV);
 export const mockFaculty: User[] = parseCSV(facultyCSV);
 
+// Store all users in localStorage for access in other components
+const allUsers = [...mockAlumni, ...mockStudents, ...mockFaculty];
+localStorage.setItem('allUsers', JSON.stringify(allUsers));
+
 export const getRecommendedAlumni = (studentField: string) => {
   return mockAlumni.filter(alumni => alumni.field === studentField);
 };
@@ -71,3 +75,8 @@ export const getAlumniByCompany = (company: string): User[] => {
 export const getFacultyByDepartment = (department: string): User[] => {
   return mockFaculty.filter(faculty => faculty.department?.toLowerCase() === department.toLowerCase());
 };
+
+// Initialize empty messages array in localStorage if it doesn't exist
+if (!localStorage.getItem('messages')) {
+  localStorage.setItem('messages', JSON.stringify([]));
+}

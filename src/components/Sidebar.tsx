@@ -54,6 +54,11 @@ export function Sidebar() {
           />
           <SidebarItem 
             icon={<MessageSquare className="h-5 w-5" />} 
+            href="/dashboard/messages" 
+            label="Messages" 
+          />
+          <SidebarItem 
+            icon={<MessageSquare className="h-5 w-5" />} 
             href="/dashboard/forums" 
             label="Discussion Forums" 
           />

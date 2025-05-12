@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Menu, User, LogIn, LogOut } from "lucide-react";
+import { Menu, User, LogIn, LogOut, MessageSquare } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -19,6 +19,7 @@ import {
 } from "./ui/dropdown-menu";
 import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/components/ui/use-toast";
+import { NotificationBell } from "@/components/NotificationBell";
 
 interface NavbarProps {
   isAuthenticated?: boolean;
@@ -102,34 +103,51 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
         
         <div className="flex items-center space-x-3">
           {isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Avatar className="border-2 border-accent hover:border-white cursor-pointer">
-                  <AvatarImage src={user?.avatar || ""} />
-                  <AvatarFallback className="bg-secondary text-white">
-                    {getUserInitials()}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
-                <DropdownMenuLabel className="text-xs text-muted-foreground">
-                  {user?.role}
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard" className="cursor-pointer w-full">Dashboard</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard/profile" className="cursor-pointer w-full">Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <>
+              {/* Messages link */}
+              <Link 
+                to="/dashboard/messages" 
+                className="hidden md:flex text-white hover:text-white/80"
+                title="Messages"
+              >
+                <MessageSquare className="h-5 w-5" />
+              </Link>
+              
+              {/* Notification bell */}
+              <NotificationBell />
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="border-2 border-accent hover:border-white cursor-pointer">
+                    <AvatarImage src={user?.avatar || ""} />
+                    <AvatarFallback className="bg-secondary text-white">
+                      {getUserInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">
+                    {user?.role}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="cursor-pointer w-full">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/messages" className="cursor-pointer w-full">Messages</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/profile" className="cursor-pointer w-full">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           ) : (
             <div className="hidden md:flex space-x-2">
               <Link to="/login">
@@ -195,6 +213,16 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
                 >
                   Contact
                 </Link>
+                
+                {isAuthenticated && (
+                  <Link 
+                    to="/dashboard/messages" 
+                    className={`text-base font-medium ${isActive("/dashboard/messages") ? "text-primary" : ""}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Messages
+                  </Link>
+                )}
                 
                 {isAuthenticated ? (
                   <div className="border-t pt-4 mt-4">
