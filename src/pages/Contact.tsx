@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -14,12 +13,12 @@ export default function Contact() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [submitting, setSubmitting] = useState(false); // Changed variable name to match boolean type
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
+    setIsSubmitting(true);
     
     // Validate form
     if (!name || !email || !message) {
@@ -28,7 +27,7 @@ export default function Contact() {
         description: "Please fill out all required fields",
         variant: "destructive",
       });
-      setSubmitting(false);
+      setIsSubmitting(false);
       return;
     }
     
@@ -38,7 +37,7 @@ export default function Contact() {
         description: "Please enter a valid email address",
         variant: "destructive",
       });
-      setSubmitting(false);
+      setIsSubmitting(false);
       return;
     }
     
@@ -54,7 +53,7 @@ export default function Contact() {
       setEmail("");
       setSubject("");
       setMessage("");
-      setSubmitting(false);
+      setIsSubmitting(false);
     }, 1000);
   };
 
@@ -181,9 +180,9 @@ export default function Contact() {
                     type="submit" 
                     variant="bright" 
                     className="w-full sm:w-auto shadow-md"
-                    disabled={submitting}
+                    disabled={isSubmitting}
                   >
-                    {submitting ? "Sending..." : "Send Message"}
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </div>

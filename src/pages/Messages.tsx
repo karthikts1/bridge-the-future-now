@@ -56,9 +56,10 @@ export default function Messages() {
   
   // Filter users based on search term and role access
   const filteredUsers = users.filter(u => {
-    // Filter by search term
-    const matchesSearch = u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        u.email.toLowerCase().includes(searchTerm.toLowerCase());
+    // Fix: Add null checks for each property used in toLowerCase
+    const nameMatch = u.name && searchTerm ? u.name.toLowerCase().includes(searchTerm.toLowerCase()) : true;
+    const emailMatch = u.email && searchTerm ? u.email.toLowerCase().includes(searchTerm.toLowerCase()) : true;
+    const matchesSearch = searchTerm ? (nameMatch || emailMatch) : true;
     
     // Filter by role access
     if (user?.role === 'student') {
@@ -76,10 +77,10 @@ export default function Messages() {
   });
   
   // Get conversation messages between current user and selected user
-  const conversationMessages = selectedUser 
+  const conversationMessages = selectedUser && user
     ? messages.filter(m => 
-        (m.senderId === user?.id && m.receiverId === selectedUser.id) || 
-        (m.senderId === selectedUser.id && m.receiverId === user?.id)
+        (m.senderId === user.id && m.receiverId === selectedUser.id) || 
+        (m.senderId === selectedUser.id && m.receiverId === user.id)
       ).sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())
     : [];
   
@@ -96,7 +97,7 @@ export default function Messages() {
       setMessages(updatedMessages);
       localStorage.setItem("messages", JSON.stringify(updatedMessages));
     }
-  }, [selectedUser, user]);
+  }, [selectedUser, user, messages]);
   
   // Get unread message count for user
   const getUnreadCount = (userId: string) => {
@@ -153,7 +154,11 @@ export default function Messages() {
       <div>
         <h1 className="text-3xl font-bold">Messages</h1>
         <p className="text-muted-foreground mt-1 mb-6">
-          Connect and communicate with other users
+          Connect and communicate with {user?.role === 'student' 
+            ? 'faculty and alumni' 
+            : user?.role === 'alumni' 
+              ? 'students and faculty' 
+              : 'students, alumni, and other faculty'}
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[70vh]">
@@ -184,7 +189,7 @@ export default function Messages() {
                       <Avatar className={`h-10 w-10 ${getUserRoleColor(contact.role)}`}>
                         <AvatarImage src={contact.avatar || ""} alt={contact.name} />
                         <AvatarFallback>
-                          {contact.name.charAt(0)}
+                          {contact.name ? contact.name.charAt(0) : "U"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
@@ -215,7 +220,7 @@ export default function Messages() {
                   <div className="flex items-center gap-3">
                     <Avatar className={`h-10 w-10 ${getUserRoleColor(selectedUser.role)}`}>
                       <AvatarImage src={selectedUser.avatar || ""} alt={selectedUser.name} />
-                      <AvatarFallback>{selectedUser.name.charAt(0)}</AvatarFallback>
+                      <AvatarFallback>{selectedUser.name ? selectedUser.name.charAt(0) : "U"}</AvatarFallback>
                     </Avatar>
                     <div>
                       <CardTitle className="text-lg font-medium">{selectedUser.name}</CardTitle>
@@ -239,7 +244,9 @@ export default function Messages() {
                             {!isSentByMe && (
                               <Avatar className={`h-8 w-8 ${getUserRoleColor(sender?.role || '')}`}>
                                 <AvatarImage src={sender?.avatar || ""} />
-                                <AvatarFallback>{sender?.name.charAt(0) || <UserIcon className="h-4 w-4" />}</AvatarFallback>
+                                <AvatarFallback>
+                                  {sender?.name ? sender.name.charAt(0) : <UserIcon className="h-4 w-4" />}
+                                </AvatarFallback>
                               </Avatar>
                             )}
                             <div
@@ -259,7 +266,9 @@ export default function Messages() {
                             {isSentByMe && (
                               <Avatar className={`h-8 w-8 ${getUserRoleColor(user?.role || '')}`}>
                                 <AvatarImage src={user?.avatar || ""} />
-                                <AvatarFallback>{user?.name.charAt(0) || <UserIcon className="h-4 w-4" />}</AvatarFallback>
+                                <AvatarFallback>
+                                  {user?.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
+                                </AvatarFallback>
                               </Avatar>
                             )}
                           </div>
