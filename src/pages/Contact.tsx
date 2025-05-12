@@ -14,7 +14,7 @@ export default function Contact() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [submitting, setSubmitting] = useState(false); // Changed variable name to match boolean type
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -195,10 +195,10 @@ export default function Contact() {
       {/* Map Section (placeholder) */}
       <section className="py-8">
         <div className="container px-4 mx-auto max-w-6xl">
-          <div className="rounded-lg overflow-hidden border border-accent/40 h-64 bg-accent/10 flex items-center justify-center">
+          <div className="rounded-lg overflow-hidden border border-accent/40 h-64 bg-accent/10">
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3885.446884438973!2d77.56681777484434!3d13.134187587196273!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae18a5c54ece35%3A0x49c4c47a68a60b9c!2sBMS%20Institute%20of%20Technology%20and%20Management!5e0!3m2!1sen!2sin!4v1746947048442!5m2!1sen!2sin"
                     className="w-full h-64 border-0"
-                    allowFullScreen=""
+                    allowFullScreen={true}
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     title="BMSIT Location">

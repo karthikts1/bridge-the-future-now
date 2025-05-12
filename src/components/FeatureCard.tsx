@@ -9,14 +9,45 @@ interface FeatureCardProps {
   description: string;
   linkTo: string;
   buttonText: string;
+  color?: string; // Added color as an optional prop
 }
 
-export function FeatureCard({ icon, title, description, linkTo, buttonText }: FeatureCardProps) {
+export function FeatureCard({ icon, title, description, linkTo, buttonText, color = "primary" }: FeatureCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  
+  // Map color names to Tailwind classes
+  const getColorClasses = (colorName: string) => {
+    const colorMap: Record<string, { border: string, bg: string, button: string }> = {
+      blue: { 
+        border: 'border-blue-300', 
+        bg: 'bg-blue-50', 
+        button: 'bg-blue-500 hover:bg-blue-600' 
+      },
+      green: { 
+        border: 'border-green-300', 
+        bg: 'bg-green-50', 
+        button: 'bg-green-500 hover:bg-green-600' 
+      },
+      purple: { 
+        border: 'border-purple-300', 
+        bg: 'bg-purple-50', 
+        button: 'bg-purple-500 hover:bg-purple-600' 
+      },
+      primary: { 
+        border: 'border-accent', 
+        bg: 'bg-accent/10', 
+        button: '' // Uses the default Button styles
+      }
+    };
+    
+    return colorMap[colorName] || colorMap.primary;
+  };
+  
+  const colorClasses = getColorClasses(color);
   
   return (
     <div 
-      className={`group rounded-lg border-2 ${isHovered ? 'border-primary bg-accent/10' : 'border-accent bg-white'} p-6 shadow-md transition-all hover:shadow-xl`}
+      className={`group rounded-lg border-2 ${isHovered ? `${colorClasses.border} ${colorClasses.bg}` : 'border-accent bg-white'} p-6 shadow-md transition-all hover:shadow-xl`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -28,7 +59,7 @@ export function FeatureCard({ icon, title, description, linkTo, buttonText }: Fe
       <Link to={linkTo}>
         <Button 
           variant={isHovered ? "bright" : "outline"} 
-          className="w-full font-medium shadow-md transition-all"
+          className={`w-full font-medium shadow-md transition-all ${isHovered && color !== 'primary' ? colorClasses.button : ''}`}
         >
           {buttonText}
         </Button>
