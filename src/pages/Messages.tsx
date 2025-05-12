@@ -23,6 +23,8 @@ export default function Messages() {
   
   // Load users and messages from localStorage on mount
   useEffect(() => {
+    if (!user) return;
+    
     // Get all users except current user
     const allUsers = getAllUsers().filter(u => u.id !== user?.id);
     setUsers(allUsers);
@@ -46,19 +48,21 @@ export default function Messages() {
   
   // Filter users based on search term and role access
   const filteredUsers = users.filter(u => {
+    if (!user) return false;
+    
     // Add null checks for each property used in toLowerCase
     const nameMatch = u.name && searchTerm ? u.name.toLowerCase().includes(searchTerm.toLowerCase()) : true;
     const emailMatch = u.email && searchTerm ? u.email.toLowerCase().includes(searchTerm.toLowerCase()) : true;
     const matchesSearch = searchTerm ? (nameMatch || emailMatch) : true;
     
     // Filter by role access
-    if (user?.role === 'student') {
+    if (user.role === 'student') {
       // Students can message faculty and alumni
       return matchesSearch && (u.role === 'faculty' || u.role === 'alumni');
-    } else if (user?.role === 'faculty') {
+    } else if (user.role === 'faculty') {
       // Faculty can message everyone
       return matchesSearch;
-    } else if (user?.role === 'alumni') {
+    } else if (user.role === 'alumni') {
       // Alumni can message students and faculty
       return matchesSearch && (u.role === 'student' || u.role === 'faculty');
     }
@@ -139,6 +143,16 @@ export default function Messages() {
     return users.find(u => u.id === id) || undefined;
   };
 
+  if (!user) {
+    return (
+      <DashboardLayout>
+        <div className="text-center p-8">
+          <p>Loading user data...</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
       <div>
@@ -183,7 +197,7 @@ export default function Messages() {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">{contact.name}</p>
+                        <p className="font-medium truncate">{contact.name || "Unknown"}</p>
                         <p className="text-xs text-muted-foreground capitalize">{contact.role}</p>
                       </div>
                       {unreadCount > 0 && (
@@ -213,7 +227,7 @@ export default function Messages() {
                       <AvatarFallback>{selectedUser.name ? selectedUser.name.charAt(0) : "U"}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <CardTitle className="text-lg font-medium">{selectedUser.name}</CardTitle>
+                      <CardTitle className="text-lg font-medium">{selectedUser.name || "Unknown"}</CardTitle>
                       <p className="text-xs text-muted-foreground capitalize">{selectedUser.role}</p>
                     </div>
                   </div>
@@ -222,7 +236,7 @@ export default function Messages() {
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[calc(70vh-180px)]">
                   {conversationMessages.length > 0 ? (
                     conversationMessages.map((msg) => {
-                      const isSentByMe = msg.senderId === user?.id;
+                      const isSentByMe = msg.senderId === user.id;
                       const sender = isSentByMe ? user : getUserById(msg.senderId);
                       
                       return (
@@ -242,8 +256,8 @@ export default function Messages() {
                             <div
                               className={`rounded-lg px-3 py-2 ${
                                 isSentByMe 
-                                  ? user?.role === 'student' ? 'bg-blue-500 text-white' :
-                                    user?.role === 'alumni' ? 'bg-green-500 text-white' :
+                                  ? user.role === 'student' ? 'bg-blue-500 text-white' :
+                                    user.role === 'alumni' ? 'bg-green-500 text-white' :
                                     'bg-purple-500 text-white'
                                   : 'bg-accent border'
                               }`}
@@ -254,10 +268,10 @@ export default function Messages() {
                               </p>
                             </div>
                             {isSentByMe && (
-                              <Avatar className={`h-8 w-8 ${getUserRoleColor(user?.role || '')}`}>
-                                <AvatarImage src={user?.avatar || ""} alt={user?.name || ""} />
+                              <Avatar className={`h-8 w-8 ${getUserRoleColor(user.role || '')}`}>
+                                <AvatarImage src={user.avatar || ""} alt={user.name || ""} />
                                 <AvatarFallback>
-                                  {user?.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
+                                  {user.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
                                 </AvatarFallback>
                               </Avatar>
                             )}
@@ -294,8 +308,8 @@ export default function Messages() {
                       disabled={!message.trim()}
                       size="icon"
                       className={
-                        user?.role === 'student' ? 'bg-blue-500 hover:bg-blue-600' :
-                        user?.role === 'alumni' ? 'bg-green-500 hover:bg-green-600' :
+                        user.role === 'student' ? 'bg-blue-500 hover:bg-blue-600' :
+                        user.role === 'alumni' ? 'bg-green-500 hover:bg-green-600' :
                         'bg-purple-500 hover:bg-purple-600'
                       }
                     >
