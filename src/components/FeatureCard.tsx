@@ -9,7 +9,7 @@ export interface FeatureCardProps {
   description: string;
   linkTo: string;
   buttonText: string;
-  color?: string;
+  color?: "blue" | "green" | "purple"; // Explicitly define color type
 }
 
 export const FeatureCard = ({ icon, title, description, linkTo, buttonText, color = "blue" }: FeatureCardProps) => {

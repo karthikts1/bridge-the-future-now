@@ -263,7 +263,7 @@ export default function Academic() {
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center mb-4">
                     <Avatar className="h-16 w-16 mb-3">
-                      <AvatarImage src="" />
+                      <AvatarImage src="" alt={tutor.name} />
                       <AvatarFallback className="bg-alumni-300 text-white">
                         <User className="h-8 w-8" />
                       </AvatarFallback>
