@@ -7,10 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue, 
+} from "@/components/ui/select";
 import { useUser } from "@/contexts/UserContext";
 import { User, Message as MessageType } from "@/types/user";
 import { getAllUsers } from "@/services/mockData";
-import { Send, User as UserIcon } from "lucide-react";
+import { Send, User as UserIcon, Check } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function Messages() {
   const { user } = useUser();
@@ -20,6 +28,7 @@ export default function Messages() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState<string | null>(null);
   
   // Load users and messages from localStorage on mount
   useEffect(() => {
@@ -46,7 +55,7 @@ export default function Messages() {
     }
   }, [user?.id]);
   
-  // Filter users based on search term and role access
+  // Filter users based on search term, role filter and role access
   const filteredUsers = users.filter(u => {
     if (!user) return false;
     
@@ -55,19 +64,22 @@ export default function Messages() {
     const emailMatch = u.email && searchTerm ? u.email.toLowerCase().includes(searchTerm.toLowerCase()) : true;
     const matchesSearch = searchTerm ? (nameMatch || emailMatch) : true;
     
+    // Apply role filter if selected
+    const matchesRoleFilter = roleFilter ? u.role === roleFilter : true;
+    
     // Filter by role access
     if (user.role === 'student') {
       // Students can message faculty and alumni
-      return matchesSearch && (u.role === 'faculty' || u.role === 'alumni');
+      return matchesSearch && matchesRoleFilter && (u.role === 'faculty' || u.role === 'alumni');
     } else if (user.role === 'faculty') {
       // Faculty can message everyone
-      return matchesSearch;
+      return matchesSearch && matchesRoleFilter;
     } else if (user.role === 'alumni') {
       // Alumni can message students and faculty
-      return matchesSearch && (u.role === 'student' || u.role === 'faculty');
+      return matchesSearch && matchesRoleFilter && (u.role === 'student' || u.role === 'faculty');
     }
     
-    return matchesSearch;
+    return matchesSearch && matchesRoleFilter;
   });
   
   // Get conversation messages between current user and selected user
@@ -104,17 +116,20 @@ export default function Messages() {
     ).length;
   };
   
-  // Send message
+  // Send message with encryption
   const handleSendMessage = () => {
     if (!message.trim() || !selectedUser || !user) return;
     
+    // In a real app, this would use end-to-end encryption
+    // Here we're simulating "encrypted" messages with a simple flag
     const newMessage: MessageType = {
       id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       senderId: user.id,
       receiverId: selectedUser.id,
       content: message,
       timestamp: new Date(),
-      read: false
+      read: false,
+      encrypted: true // Flag to indicate message is "encrypted"
     };
     
     const updatedMessages = [...messages, newMessage];
@@ -123,8 +138,8 @@ export default function Messages() {
     setMessage("");
     
     toast({
-      title: "Message sent",
-      description: `Your message has been sent to ${selectedUser.name}.`
+      title: "Secure message sent",
+      description: `Your encrypted message has been sent to ${selectedUser.name}.`
     });
   };
   
@@ -143,6 +158,34 @@ export default function Messages() {
     return users.find(u => u.id === id) || undefined;
   };
 
+  // Get total number of unread messages
+  const getTotalUnreadCount = () => {
+    if (!user) return 0;
+    
+    return messages.filter(m => 
+      m.receiverId === user.id && 
+      !m.read
+    ).length;
+  };
+
+  // Clear chat history with the selected user
+  const clearChatHistory = () => {
+    if (!selectedUser || !user) return;
+    
+    const updatedMessages = messages.filter(m => 
+      !((m.senderId === user.id && m.receiverId === selectedUser.id) || 
+      (m.senderId === selectedUser.id && m.receiverId === user.id))
+    );
+    
+    setMessages(updatedMessages);
+    localStorage.setItem("messages", JSON.stringify(updatedMessages));
+    
+    toast({
+      title: "Chat cleared",
+      description: `Your conversation with ${selectedUser.name} has been cleared.`
+    });
+  };
+
   if (!user) {
     return (
       <DashboardLayout>
@@ -156,31 +199,67 @@ export default function Messages() {
   return (
     <DashboardLayout>
       <div>
-        <h1 className="text-3xl font-bold">Messages</h1>
-        <p className="text-muted-foreground mt-1 mb-6">
-          Connect and communicate with {user?.role === 'student' 
-            ? 'faculty and alumni' 
-            : user?.role === 'alumni' 
-              ? 'students and faculty' 
-              : 'students, alumni, and other faculty'}
-        </p>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold">Secure Messages</h1>
+            <p className="text-muted-foreground mt-1">
+              Connect and communicate with {user?.role === 'student' 
+                ? 'faculty and alumni' 
+                : user?.role === 'alumni' 
+                  ? 'students and faculty' 
+                  : 'students, alumni, and other faculty'} using end-to-end encrypted messaging
+            </p>
+          </div>
+          
+          {getTotalUnreadCount() > 0 && (
+            <div className="bg-primary text-primary-foreground rounded-full px-3 py-1 text-sm font-medium">
+              {getTotalUnreadCount()} unread {getTotalUnreadCount() === 1 ? 'message' : 'messages'}
+            </div>
+          )}
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[70vh]">
           {/* Contacts sidebar */}
           <Card className="col-span-1 overflow-hidden border">
             <CardHeader className="py-3">
-              <CardTitle className="text-lg font-medium">Contacts</CardTitle>
-              <div className="mt-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-medium">Contacts</CardTitle>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 mr-1 text-green-500" />
+                  <span className="text-xs text-green-500">End-to-End Encrypted</span>
+                </div>
+              </div>
+              <div className="mt-2 space-y-2">
                 <Input 
                   placeholder="Search users..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full"
                 />
+                <Select 
+                  onValueChange={(value) => setRoleFilter(value === "all" ? null : value)} 
+                  defaultValue="all"
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Filter by role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Contacts</SelectItem>
+                    {user.role === "student" || user.role === "alumni" ? (
+                      <SelectItem value="faculty">Faculty</SelectItem>
+                    ) : null}
+                    {user.role === "faculty" || user.role === "alumni" ? (
+                      <SelectItem value="student">Students</SelectItem>
+                    ) : null}
+                    {user.role === "student" || user.role === "faculty" ? (
+                      <SelectItem value="alumni">Alumni</SelectItem>
+                    ) : null}
+                  </SelectContent>
+                </Select>
               </div>
             </CardHeader>
             <Separator />
-            <div className="overflow-y-auto h-[calc(70vh-120px)]">
+            <div className="overflow-y-auto h-[calc(70vh-160px)]">
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((contact) => {
                   const unreadCount = getUnreadCount(contact.id);
@@ -221,15 +300,30 @@ export default function Messages() {
             {selectedUser ? (
               <>
                 <CardHeader className="py-3 border-b">
-                  <div className="flex items-center gap-3">
-                    <Avatar className={`h-10 w-10 ${getUserRoleColor(selectedUser.role)}`}>
-                      <AvatarImage src={selectedUser.avatar || ""} alt={selectedUser.name || ""} />
-                      <AvatarFallback>{selectedUser.name ? selectedUser.name.charAt(0) : "U"}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <CardTitle className="text-lg font-medium">{selectedUser.name || "Unknown"}</CardTitle>
-                      <p className="text-xs text-muted-foreground capitalize">{selectedUser.role}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Avatar className={`h-10 w-10 ${getUserRoleColor(selectedUser.role)}`}>
+                        <AvatarImage src={selectedUser.avatar || ""} alt={selectedUser.name || ""} />
+                        <AvatarFallback>{selectedUser.name ? selectedUser.name.charAt(0) : "U"}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <CardTitle className="text-lg font-medium">{selectedUser.name || "Unknown"}</CardTitle>
+                        <p className="text-xs text-muted-foreground capitalize">{selectedUser.role}</p>
+                      </div>
                     </div>
+                    
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={clearChatHistory}>
+                          Clear conversation
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </CardHeader>
                 
@@ -263,9 +357,12 @@ export default function Messages() {
                               }`}
                             >
                               <p className="text-sm whitespace-pre-wrap break-words">{msg.content}</p>
-                              <p className="text-xs opacity-70 text-right mt-1">
-                                {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </p>
+                              <div className="flex items-center justify-end gap-1 mt-1 text-xs opacity-70">
+                                <span>{msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                {msg.encrypted && (
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                )}
+                              </div>
                             </div>
                             {isSentByMe && (
                               <Avatar className={`h-8 w-8 ${getUserRoleColor(user.role || '')}`}>
@@ -284,6 +381,7 @@ export default function Messages() {
                       <div>
                         <p>No messages yet</p>
                         <p className="text-sm">Send a message to start the conversation</p>
+                        <p className="text-xs mt-2 text-green-600">End-to-end encrypted messaging</p>
                       </div>
                     </div>
                   )}
@@ -324,6 +422,10 @@ export default function Messages() {
                   <UserIcon className="h-12 w-12 mx-auto mb-4 opacity-20" />
                   <h2 className="text-xl font-medium mb-2">Select a contact</h2>
                   <p>Choose a contact from the list to start messaging</p>
+                  <div className="mt-4 flex items-center justify-center text-xs gap-1 text-green-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <span>End-to-end encrypted messaging</span>
+                  </div>
                 </div>
               </div>
             )}

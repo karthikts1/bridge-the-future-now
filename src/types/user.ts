@@ -25,6 +25,7 @@ export interface Message {
   content: string;
   timestamp: Date;
   read: boolean;
+  encrypted?: boolean; // Flag to indicate if message is encrypted
 }
 
 export interface UserContextType {
