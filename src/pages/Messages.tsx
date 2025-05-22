@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { useUser } from "@/contexts/UserContext";
 import { User, Message as MessageType } from "@/types/user";
-import { getAllUsers } from "@/services/mockData";
 import { Send, User as UserIcon, Check } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
@@ -30,13 +28,25 @@ export default function Messages() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
   
-  // Load users and messages from localStorage on mount
+  // Load real users and messages from localStorage on mount
   useEffect(() => {
     if (!user) return;
     
-    // Get all users except current user
-    const allUsers = getAllUsers().filter(u => u.id !== user?.id);
-    setUsers(allUsers);
+    // Get registered users from localStorage
+    const registeredUsersString = localStorage.getItem("registeredUsers");
+    let registeredUsers: User[] = [];
+    
+    if (registeredUsersString) {
+      try {
+        registeredUsers = JSON.parse(registeredUsersString);
+      } catch (error) {
+        console.error("Failed to parse registered users:", error);
+      }
+    }
+    
+    // Only include actual registered users (not the current user)
+    const actualUsers = registeredUsers.filter(u => u.id !== user?.id);
+    setUsers(actualUsers);
     
     // Load messages from localStorage
     const savedMessages = localStorage.getItem("messages");
@@ -67,18 +77,7 @@ export default function Messages() {
     // Apply role filter if selected
     const matchesRoleFilter = roleFilter ? u.role === roleFilter : true;
     
-    // Filter by role access
-    if (user.role === 'student') {
-      // Students can message faculty and alumni
-      return matchesSearch && matchesRoleFilter && (u.role === 'faculty' || u.role === 'alumni');
-    } else if (user.role === 'faculty') {
-      // Faculty can message everyone
-      return matchesSearch && matchesRoleFilter;
-    } else if (user.role === 'alumni') {
-      // Alumni can message students and faculty
-      return matchesSearch && matchesRoleFilter && (u.role === 'student' || u.role === 'faculty');
-    }
-    
+    // All registered users can message each other, regardless of role
     return matchesSearch && matchesRoleFilter;
   });
   
@@ -203,11 +202,7 @@ export default function Messages() {
           <div>
             <h1 className="text-3xl font-bold">Secure Messages</h1>
             <p className="text-muted-foreground mt-1">
-              Connect and communicate with {user?.role === 'student' 
-                ? 'faculty and alumni' 
-                : user?.role === 'alumni' 
-                  ? 'students and faculty' 
-                  : 'students, alumni, and other faculty'} using end-to-end encrypted messaging
+              Connect and communicate with other users using end-to-end encrypted messaging
             </p>
           </div>
           
@@ -245,15 +240,9 @@ export default function Messages() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Contacts</SelectItem>
-                    {user.role === "student" || user.role === "alumni" ? (
-                      <SelectItem value="faculty">Faculty</SelectItem>
-                    ) : null}
-                    {user.role === "faculty" || user.role === "alumni" ? (
-                      <SelectItem value="student">Students</SelectItem>
-                    ) : null}
-                    {user.role === "student" || user.role === "faculty" ? (
-                      <SelectItem value="alumni">Alumni</SelectItem>
-                    ) : null}
+                    <SelectItem value="faculty">Faculty</SelectItem>
+                    <SelectItem value="student">Students</SelectItem>
+                    <SelectItem value="alumni">Alumni</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -289,7 +278,7 @@ export default function Messages() {
                 })
               ) : (
                 <div className="p-4 text-center text-muted-foreground">
-                  No contacts found
+                  {users.length === 0 ? "No other users have registered yet" : "No contacts found"}
                 </div>
               )}
             </div>

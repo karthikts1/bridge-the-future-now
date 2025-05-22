@@ -29,6 +29,26 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (user) {
       localStorage.setItem("userData", JSON.stringify(user));
       localStorage.setItem("isAuthenticated", "true");
+      
+      // Add this user to registeredUsers in localStorage if not present
+      const registeredUsersString = localStorage.getItem("registeredUsers");
+      let registeredUsers: User[] = [];
+      
+      if (registeredUsersString) {
+        try {
+          registeredUsers = JSON.parse(registeredUsersString);
+        } catch (error) {
+          console.error("Failed to parse registered users:", error);
+        }
+      }
+      
+      // Check if user already exists in the array
+      const userExists = registeredUsers.some(u => u.id === user.id);
+      
+      if (!userExists) {
+        registeredUsers.push(user);
+        localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
+      }
     } else {
       localStorage.removeItem("userData");
       localStorage.removeItem("isAuthenticated");

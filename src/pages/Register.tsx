@@ -23,7 +23,7 @@ import {
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useUser } from "@/contexts/UserContext";
-import { UserRole } from "@/types/user";
+import { UserRole, User } from "@/types/user";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
@@ -54,36 +54,44 @@ export default function Register() {
     setIsLoading(true);
     setError(null);
     
-    // Mock registration - In a real app, this would be an API call
-    setTimeout(() => {
-      // Create mock user based on registration
-      const mockUser = {
-        id: "user-" + Math.random().toString(36).substring(2, 9),
-        name: fullName,
-        email: email,
-        role: userType as UserRole,
-        graduationYear: userType !== 'faculty' ? graduationYear : undefined,
-        field: userType !== 'faculty' ? "Computer Science" : undefined,
-        company: userType === 'alumni' ? "New Graduate" : undefined,
-        position: userType === 'alumni' ? "Entry Level" : undefined,
-        department: userType === 'faculty' ? "Department of Computer Science" : undefined,
-      };
-      
-      // Set user in context
-      setUser(mockUser);
-      
-      // Save in local storage
-      localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("userData", JSON.stringify(mockUser));
-      
-      toast({
-        title: "Registration successful",
-        description: `Welcome to AlumniConnect, ${fullName}!`,
-      });
-      
-      setIsLoading(false);
-      navigate("/dashboard");
-    }, 1500);
+    // Create new user based on registration
+    const newUser: User = {
+      id: "user-" + Math.random().toString(36).substring(2, 9),
+      name: fullName,
+      email: email,
+      role: userType as UserRole,
+      graduationYear: userType !== 'faculty' ? graduationYear : undefined,
+      field: userType !== 'faculty' ? "Computer Science" : undefined,
+      company: userType === 'alumni' ? "New Graduate" : undefined,
+      position: userType === 'alumni' ? "Entry Level" : undefined,
+      department: userType === 'faculty' ? "Department of Computer Science" : undefined,
+    };
+    
+    // Set user in context
+    setUser(newUser);
+    
+    // Save registered user in localStorage
+    const registeredUsersString = localStorage.getItem("registeredUsers");
+    let registeredUsers: User[] = [];
+    
+    if (registeredUsersString) {
+      try {
+        registeredUsers = JSON.parse(registeredUsersString);
+      } catch (error) {
+        console.error("Failed to parse registered users:", error);
+      }
+    }
+    
+    registeredUsers.push(newUser);
+    localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
+    
+    toast({
+      title: "Registration successful",
+      description: `Welcome to AlumniConnect, ${fullName}!`,
+    });
+    
+    setIsLoading(false);
+    navigate("/dashboard");
   };
 
   // Generate year options: current year to 30 years ago
