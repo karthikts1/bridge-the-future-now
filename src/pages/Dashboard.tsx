@@ -1,9 +1,9 @@
-
 import { useUser } from "@/contexts/UserContext";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { FeatureCard } from "@/components/FeatureCard";
 import { AlumniCard } from "@/components/AlumniCard";
-import { getRecommendedAlumni, getRelatedFaculty } from "@/services/mockData";
+import { getRelatedFaculty, getAllUsers } from "@/services/mockData";
+import { getSimilarAlumni } from "@/utils/cosineSimilarity";
 import { useToast } from "@/components/ui/use-toast";
 import { 
   MessageSquare, 
@@ -20,8 +20,22 @@ export default function Dashboard() {
   const { user } = useUser();
   const { toast } = useToast();
   
-  // Data based on user type
-  const recommendedAlumni = user?.role === 'student' && user?.field ? getRecommendedAlumni(user.field) : [];
+  // Get all users (including registered users from localStorage)
+  const registeredUsersString = localStorage.getItem("registeredUsers");
+  let registeredUsers = [];
+  
+  if (registeredUsersString) {
+    try {
+      registeredUsers = JSON.parse(registeredUsersString);
+    } catch (error) {
+      console.error("Failed to parse registered users:", error);
+    }
+  }
+  
+  const allUsers = [...getAllUsers(), ...registeredUsers];
+  
+  // Data based on user type with cosine similarity
+  const recommendedAlumni = user?.role === 'student' ? getSimilarAlumni(user, allUsers) : [];
   const relatedFaculty = user?.role === 'student' && user?.courses ? getRelatedFaculty(user.courses) : [];
 
   const handleConnectWithAlumni = (id: string) => {
@@ -84,7 +98,12 @@ export default function Dashboard() {
 
       {recommendedAlumni.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Recommended Alumni in {user?.field}</h2>
+          <h2 className="text-xl font-semibold">
+            Recommended Alumni Connections
+            <span className="text-sm text-muted-foreground ml-2 font-normal">
+              (Based on profile similarity)
+            </span>
+          </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {recommendedAlumni.map(alumni => (
               <AlumniCard 
