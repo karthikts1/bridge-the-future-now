@@ -4,7 +4,7 @@ import { FeatureCard } from "@/components/FeatureCard";
 import { AlumniCard } from "@/components/AlumniCard";
 import { getRelatedFaculty, getAllUsers } from "@/services/mockData";
 import { getSimilarAlumni } from "@/utils/cosineSimilarity";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { 
   MessageSquare, 
   Users, 
@@ -33,10 +33,15 @@ export default function Dashboard() {
   }
   
   const allUsers = [...getAllUsers(), ...registeredUsers];
+  console.log("All users:", allUsers);
+  console.log("Current user:", user);
   
   // Data based on user type with cosine similarity
   const recommendedAlumni = user?.role === 'student' ? getSimilarAlumni(user, allUsers) : [];
+  console.log("Recommended alumni:", recommendedAlumni);
+  
   const relatedFaculty = user?.role === 'student' && user?.courses ? getRelatedFaculty(user.courses) : [];
+  console.log("Related faculty:", relatedFaculty);
 
   const handleConnectWithAlumni = (id: string) => {
     const alumni = recommendedAlumni.find(alumni => alumni.id === id);
@@ -93,6 +98,17 @@ export default function Dashboard() {
             buttonText="Join Discussions"
             color="blue"
           />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Debug Info</h2>
+        <div className="p-4 bg-gray-100 rounded-lg">
+          <p>Total users: {allUsers.length}</p>
+          <p>Alumni users: {allUsers.filter(u => u.role === 'alumni').length}</p>
+          <p>Recommended alumni: {recommendedAlumni.length}</p>
+          <p>User field: {user?.field || 'Not set'}</p>
+          <p>User courses: {user?.courses?.join(', ') || 'Not set'}</p>
         </div>
       </div>
 
