@@ -36,7 +36,7 @@ export default function Dashboard() {
   console.log("All users:", allUsers);
   console.log("Current user:", user);
   
-  // Data based on user type with cosine similarity
+  // Data based on user type with enhanced cosine similarity
   const recommendedAlumni = user?.role === 'student' ? getSimilarAlumni(user, allUsers) : [];
   console.log("Recommended alumni:", recommendedAlumni);
   
@@ -108,7 +108,9 @@ export default function Dashboard() {
           <p>Alumni users: {allUsers.filter(u => u.role === 'alumni').length}</p>
           <p>Recommended alumni: {recommendedAlumni.length}</p>
           <p>User field: {user?.field || 'Not set'}</p>
-          <p>User courses: {user?.courses?.join(', ') || 'Not set'}</p>
+          <p>User skills: {user?.skills?.join(', ') || 'Not set'}</p>
+          <p>User interests: {user?.interests?.join(', ') || 'Not set'}</p>
+          <p>User industry: {user?.industry || 'Not set'}</p>
         </div>
       </div>
 
@@ -117,10 +119,10 @@ export default function Dashboard() {
           <h2 className="text-xl font-semibold">
             Recommended Alumni Connections
             <span className="text-sm text-muted-foreground ml-2 font-normal">
-              (Based on profile similarity)
+              (Based on skills, interests, and career goals)
             </span>
           </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {recommendedAlumni.map(alumni => (
               <AlumniCard 
                 key={alumni.id}
@@ -131,10 +133,17 @@ export default function Dashboard() {
                 company={alumni.company}
                 graduationYear={alumni.graduationYear}
                 field={alumni.field}
+                similarityScore={alumni.similarityScore}
+                reasons={alumni.reasons}
                 onConnect={handleConnectWithAlumni}
                 onMessage={handleMessageAlumni}
               />
             ))}
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              Matches are based on your profile information including skills, interests, field of study, and career goals.
+            </p>
           </div>
         </div>
       )}

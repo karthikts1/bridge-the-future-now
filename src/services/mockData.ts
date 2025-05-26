@@ -5,21 +5,47 @@ import alumniCSV from '@/data/alumni.csv?raw';
 import studentsCSV from '@/data/students.csv?raw';
 import facultyCSV from '@/data/faculty.csv?raw';
 
-// CSV parsing function
+// Enhanced CSV parsing function
 const parseCSV = (csv: string): any[] => {
-  const lines = csv.split('\n');
+  const lines = csv.trim().split('\n');
+  if (lines.length === 0) return [];
+  
   const headers = lines[0].split(',');
   
   return lines.slice(1).filter(line => line.trim()).map(line => {
-    const values = line.split(',');
+    // Handle comma-separated values while preserving commas within quoted fields
+    const values = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ',' && !inQuotes) {
+        values.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    values.push(current.trim()); // Add the last value
+    
     const entry: any = {};
     
     headers.forEach((header, index) => {
-      let value = values[index];
+      let value = values[index] || '';
+      
+      // Remove quotes if present
+      if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.slice(1, -1);
+      }
       
       // Handle special cases
-      if (header === 'courses') {
-        entry[header] = value ? value.split('|') : [];
+      if (header === 'courses' || header === 'skills' || header === 'interests') {
+        entry[header] = value ? value.split('|').map(item => item.trim()) : [];
+      } else if (header === 'experienceYears') {
+        entry[header] = value ? parseInt(value) : undefined;
       } else if (value === '') {
         entry[header] = undefined;
       } else {

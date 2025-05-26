@@ -16,6 +16,13 @@ export interface User {
   department?: string;
   bio?: string;
   courses?: string[]; // Array of course IDs
+  skills?: string[]; // Array of skills
+  interests?: string[]; // Array of interests
+  careerGoals?: string; // Career aspirations
+  industry?: string; // Preferred industry
+  location?: string; // Geographic location
+  experienceYears?: number; // Years of experience (for alumni)
+  specialization?: string; // Area of specialization
 }
 
 export interface Message {
