@@ -1,25 +1,14 @@
-
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Menu, User, LogIn, LogOut, MessageSquare } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "./ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import { Menu, LogOut, MessageSquare } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/components/ui/use-toast";
-import { NotificationBell } from "@/components/NotificationBell";
+import { NavLinks } from "./navbar/NavLinks";
+import { AuthButtons } from "./navbar/AuthButtons";
+import { UserMenu } from "./navbar/UserMenu";
 
 interface NavbarProps {
   isAuthenticated?: boolean;
@@ -30,18 +19,10 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const location = useLocation();
 
   const isAuthenticated = propIsAuthenticated !== undefined 
     ? propIsAuthenticated 
     : (localStorage.getItem("isAuthenticated") === "true" && user !== null);
-
-  // Function to check if a link is active
-  const isActive = (path: string) => {
-    if (path === "/" && location.pathname === "/") return true;
-    if (path !== "/" && location.pathname.startsWith(path)) return true;
-    return false;
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
@@ -66,112 +47,16 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
           <span className="font-bold text-2xl tracking-tight text-white">AlumniConnect</span>
         </Link>
         
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link 
-            to="/" 
-            className={`text-sm font-medium transition-colors ${
-              isActive("/") ? "text-white font-bold" : "text-white/90 hover:text-white"
-            }`}
-          >
-            Home
-          </Link>
-          <Link 
-            to="/about" 
-            className={`text-sm font-medium transition-colors ${
-              isActive("/about") ? "text-white font-bold" : "text-white/90 hover:text-white"
-            }`}
-          >
-            About Us
-          </Link>
-          <Link 
-            to="/services" 
-            className={`text-sm font-medium transition-colors ${
-              isActive("/services") ? "text-white font-bold" : "text-white/90 hover:text-white"
-            }`}
-          >
-            Services
-          </Link>
-          <Link 
-            to="/contact" 
-            className={`text-sm font-medium transition-colors ${
-              isActive("/contact") ? "text-white font-bold" : "text-white/90 hover:text-white"
-            }`}
-          >
-            Contact
-          </Link>
-        </nav>
+        <NavLinks />
         
         <div className="flex items-center space-x-3">
-          {isAuthenticated ? (
-            <>
-              {/* Messages link */}
-              <Link 
-                to="/dashboard/messages" 
-                className="hidden md:flex text-white hover:text-white/80"
-                title="Messages"
-              >
-                <MessageSquare className="h-5 w-5" />
-              </Link>
-              
-              {/* Notification bell */}
-              <NotificationBell />
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Avatar className="border-2 border-accent hover:border-white cursor-pointer">
-                    <AvatarImage src={user?.avatar || ""} />
-                    <AvatarFallback className="bg-secondary text-white">
-                      {getUserInitials()}
-                    </AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
-                  <DropdownMenuLabel className="text-xs text-muted-foreground">
-                    {user?.role}
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer w-full">Dashboard</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard/messages" className="cursor-pointer w-full">Messages</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard/profile" className="cursor-pointer w-full">Profile</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+          {isAuthenticated && user ? (
+            <UserMenu user={user} onLogout={handleLogout} />
           ) : (
-            <div className="hidden md:flex space-x-2">
-              <Link to="/login">
-                <Button 
-                  variant="contrast" 
-                  size="sm" 
-                  className="font-medium shadow-lg"
-                >
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Log In
-                </Button>
-              </Link>
-              <Link to="/register">
-                <Button 
-                  variant="bright"
-                  size="sm" 
-                  className="font-medium shadow-lg"
-                >
-                  Register
-                </Button>
-              </Link>
-            </div>
+            <AuthButtons />
           )}
           
+          {/* Mobile menu */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
               <Button 
@@ -184,6 +69,7 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
+              {/* Mobile menu content */}
               <div className="flex flex-col space-y-4 mt-8">
                 <Link 
                   to="/" 

@@ -1,19 +1,6 @@
 
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  Badge 
-} from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { 
   Select, 
@@ -22,8 +9,12 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Briefcase, Filter, Search, User, Users } from "lucide-react";
+import { Filter, Search } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useUser } from "@/contexts/UserContext";
+import { Card } from "@/components/ui/card";
+import { MentorshipInfo } from "@/components/mentorship/MentorshipInfo";
+import { MentorCard } from "@/components/mentorship/MentorCard";
 
 // Mock mentors data
 const mockMentors = [
@@ -59,7 +50,6 @@ const mockMentors = [
   }
 ];
 
-// Define industry options for filtering
 const industryOptions = [
   { label: "All Industries", value: "all" },
   { label: "Technology", value: "tech" },
@@ -71,12 +61,15 @@ export default function Mentorship() {
   const [searchQuery, setSearchQuery] = useState("");
   const [industryFilter, setIndustryFilter] = useState("all");
   const { toast } = useToast();
+  const { user } = useUser();
 
-  const handleJoinProgram = (mentorId: string) => {
+  const handleMentorAction = (mentorId: string) => {
     const mentor = mockMentors.find(m => m.id === mentorId);
+    const actionText = user?.role === 'student' ? 'mentorship request' : 'connection request';
+    
     toast({
-      title: "Mentorship request sent!",
-      description: `Your request to connect with ${mentor?.name} has been sent. They will respond shortly.`
+      title: `${actionText.charAt(0).toUpperCase() + actionText.slice(1)} sent!`,
+      description: `Your ${actionText} to connect with ${mentor?.name} has been sent. They will respond shortly.`
     });
   };
 
@@ -103,48 +96,15 @@ export default function Mentorship() {
         <div>
           <h1 className="text-3xl font-bold">Mentorship Programs</h1>
           <p className="text-muted-foreground mt-1">
-            Connect with alumni mentors for personalized guidance and support
+            {user?.role === 'student' 
+              ? "Connect with alumni mentors for personalized guidance and support"
+              : user?.role === 'alumni'
+                ? "Share your expertise and mentor the next generation"
+                : "Facilitate mentorship connections and support student development"}
           </p>
         </div>
 
-        {/* How it works section */}
-        <Card className="border-alumni-100">
-          <CardHeader>
-            <CardTitle>How Mentorship Works</CardTitle>
-            <CardDescription>
-              Our mentorship program connects current students with experienced alumni
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2 text-center">
-              <div className="h-12 w-12 rounded-full bg-alumni-100 flex items-center justify-center mx-auto">
-                <Users className="h-6 w-6 text-alumni-500" />
-              </div>
-              <h3 className="font-medium">1. Find a Mentor</h3>
-              <p className="text-sm text-muted-foreground">
-                Browse profiles and find mentors that match your career interests.
-              </p>
-            </div>
-            <div className="space-y-2 text-center">
-              <div className="h-12 w-12 rounded-full bg-alumni-100 flex items-center justify-center mx-auto">
-                <Briefcase className="h-6 w-6 text-alumni-500" />
-              </div>
-              <h3 className="font-medium">2. Connect</h3>
-              <p className="text-sm text-muted-foreground">
-                Send a request explaining your goals and what you hope to learn.
-              </p>
-            </div>
-            <div className="space-y-2 text-center">
-              <div className="h-12 w-12 rounded-full bg-alumni-100 flex items-center justify-center mx-auto">
-                <Users className="h-6 w-6 text-alumni-500" />
-              </div>
-              <h3 className="font-medium">3. Meet Regularly</h3>
-              <p className="text-sm text-muted-foreground">
-                Schedule sessions with your mentor to discuss your career path.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <MentorshipInfo userRole={user?.role || 'student'} />
 
         {/* Search and filter */}
         <div className="flex flex-col sm:flex-row gap-4">
@@ -162,7 +122,7 @@ export default function Mentorship() {
               <SelectTrigger>
                 <div className="flex items-center">
                   <Filter className="h-4 w-4 mr-2" />
-                  <span>{industryOptions.find(option => option.value === industryFilter)?.label || "All Industries"}</span>
+                  <SelectValue />
                 </div>
               </SelectTrigger>
               <SelectContent>
@@ -178,52 +138,18 @@ export default function Mentorship() {
 
         {/* Available mentors */}
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Available Mentors</h2>
+          <h2 className="text-xl font-semibold">
+            {user?.role === 'alumni' ? 'Fellow Mentors' : 'Available Mentors'}
+          </h2>
           {filteredMentors.length > 0 ? (
             <div className="grid grid-cols-1 gap-4">
               {filteredMentors.map((mentor) => (
-                <Card key={mentor.id} className="overflow-hidden border-alumni-100">
-                  <div className="p-6">
-                    <div className="flex flex-col md:flex-row md:items-start gap-6">
-                      {/* Mentor Info */}
-                      <div className="flex items-start space-x-4">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src="" />
-                          <AvatarFallback className="bg-alumni-300 text-white">
-                            <User className="h-5 w-5" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <h3 className="font-semibold text-lg">{mentor.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {mentor.position} at {mentor.company}
-                          </p>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {mentor.experience} of experience • {mentor.availability}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex-1">
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          {mentor.expertise.map((skill, index) => (
-                            <Badge key={index} variant="secondary" className="bg-alumni-100">
-                              {skill}
-                            </Badge>
-                          ))}
-                        </div>
-                        <p className="text-sm text-muted-foreground">{mentor.bio}</p>
-                      </div>
-                      
-                      <Button 
-                        className="bg-alumni-400 hover:bg-alumni-500 mt-4 md:mt-0 md:self-start whitespace-nowrap"
-                        onClick={() => handleJoinProgram(mentor.id)}
-                      >
-                        Request Mentorship
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
+                <MentorCard
+                  key={mentor.id}
+                  mentor={mentor}
+                  userRole={user?.role || 'student'}
+                  onAction={handleMentorAction}
+                />
               ))}
             </div>
           ) : (
