@@ -60,7 +60,7 @@ const App = () => (
             <Route
               path="/dashboard/mentorship"
               element={
-                <ProtectedRoute allowedRoles={['student', 'alumni']}>
+                <ProtectedRoute allowedRoles={['student', 'alumni', 'faculty']}>
                   <Mentorship />
                 </ProtectedRoute>
               }
@@ -68,7 +68,7 @@ const App = () => (
             <Route
               path="/dashboard/career"
               element={
-                <ProtectedRoute allowedRoles={['student', 'alumni']}>
+                <ProtectedRoute allowedRoles={['student', 'alumni', 'faculty']}>
                   <Career />
                 </ProtectedRoute>
               }

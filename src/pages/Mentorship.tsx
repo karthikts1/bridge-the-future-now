@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,7 @@ import { useUser } from "@/contexts/UserContext";
 import { Card } from "@/components/ui/card";
 import { MentorshipInfo } from "@/components/mentorship/MentorshipInfo";
 import { MentorCard } from "@/components/mentorship/MentorCard";
+import { FacultyMentorshipTools } from "@/components/mentorship/FacultyMentorshipTools";
 
 // Mock mentors data
 const mockMentors = [
@@ -65,12 +65,36 @@ export default function Mentorship() {
 
   const handleMentorAction = (mentorId: string) => {
     const mentor = mockMentors.find(m => m.id === mentorId);
-    const actionText = user?.role === 'student' ? 'mentorship request' : 'connection request';
+    let actionText = 'connection request';
+    
+    switch (user?.role) {
+      case 'student':
+        actionText = 'mentorship request';
+        break;
+      case 'faculty':
+        actionText = 'profile review';
+        break;
+      default:
+        actionText = 'connection request';
+    }
     
     toast({
       title: `${actionText.charAt(0).toUpperCase() + actionText.slice(1)} sent!`,
-      description: `Your ${actionText} to connect with ${mentor?.name} has been sent. They will respond shortly.`
+      description: `Your ${actionText} to connect with ${mentor?.name} has been ${user?.role === 'faculty' ? 'completed' : 'sent. They will respond shortly'}.`
     });
+  };
+
+  const getPageDescription = () => {
+    switch (user?.role) {
+      case 'student':
+        return "Connect with alumni mentors for personalized guidance and support";
+      case 'alumni':
+        return "Share your expertise and mentor the next generation";
+      case 'faculty':
+        return "Facilitate mentorship connections and support student development";
+      default:
+        return "Connect and grow through mentorship opportunities";
+    }
   };
 
   // Filter mentors based on search and industry filter
@@ -96,22 +120,24 @@ export default function Mentorship() {
         <div>
           <h1 className="text-3xl font-bold">Mentorship Programs</h1>
           <p className="text-muted-foreground mt-1">
-            {user?.role === 'student' 
-              ? "Connect with alumni mentors for personalized guidance and support"
-              : user?.role === 'alumni'
-                ? "Share your expertise and mentor the next generation"
-                : "Facilitate mentorship connections and support student development"}
+            {getPageDescription()}
           </p>
         </div>
 
-        <MentorshipInfo userRole={user?.role || 'student'} />
+        {user?.role === 'faculty' ? (
+          <FacultyMentorshipTools />
+        ) : (
+          <MentorshipInfo userRole={user?.role || 'student'} />
+        )}
 
         {/* Search and filter */}
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search mentors by name, company or expertise..."
+              placeholder={user?.role === 'faculty' 
+                ? "Search mentors to review or manage..." 
+                : "Search mentors by name, company or expertise..."}
               className="pl-8"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -139,7 +165,11 @@ export default function Mentorship() {
         {/* Available mentors */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">
-            {user?.role === 'alumni' ? 'Fellow Mentors' : 'Available Mentors'}
+            {user?.role === 'faculty' 
+              ? 'Mentor Directory' 
+              : user?.role === 'alumni' 
+                ? 'Fellow Mentors' 
+                : 'Available Mentors'}
           </h2>
           {filteredMentors.length > 0 ? (
             <div className="grid grid-cols-1 gap-4">

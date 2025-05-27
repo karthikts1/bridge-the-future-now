@@ -1,4 +1,3 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, User, Video } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useUser } from "@/contexts/UserContext";
+import { FacultyCareerTools } from "@/components/career/FacultyCareerTools";
 
 // Mock upcoming sessions data
 const upcomingSessions = [
@@ -90,13 +91,32 @@ const pastRecordings = [
 
 export default function Career() {
   const { toast } = useToast();
+  const { user } = useUser();
   
   const handleRegisterSession = (sessionId: string) => {
     const session = upcomingSessions.find(s => s.id === sessionId);
+    const actionText = user?.role === 'faculty' ? 'session management' : 'registration';
     toast({
-      title: "Registration Successful!",
-      description: `You're registered for "${session?.title}" on ${session?.date}.`
+      title: `${actionText.charAt(0).toUpperCase() + actionText.slice(1)} Successful!`,
+      description: user?.role === 'faculty' 
+        ? `You can now manage "${session?.title}" scheduled for ${session?.date}.`
+        : `You're registered for "${session?.title}" on ${session?.date}.`
     });
+  };
+
+  const getPageDescription = () => {
+    switch (user?.role) {
+      case 'faculty':
+        return "Manage career guidance sessions and support student professional development";
+      case 'alumni':
+        return "Share your expertise and participate in career guidance sessions";
+      default:
+        return "Join sessions with industry experts to get advice on your career path";
+    }
+  };
+
+  const getSessionButtonText = () => {
+    return user?.role === 'faculty' ? 'Manage Session' : 'Register for Session';
   };
 
   return (
@@ -105,13 +125,17 @@ export default function Career() {
         <div>
           <h1 className="text-3xl font-bold">Career Guidance Sessions</h1>
           <p className="text-muted-foreground mt-1">
-            Join sessions with industry experts to get advice on your career path
+            {getPageDescription()}
           </p>
         </div>
 
+        {user?.role === 'faculty' && <FacultyCareerTools />}
+
         <Tabs defaultValue="upcoming" className="w-full">
           <TabsList className="grid grid-cols-2 w-[400px]">
-            <TabsTrigger value="upcoming">Upcoming Sessions</TabsTrigger>
+            <TabsTrigger value="upcoming">
+              {user?.role === 'faculty' ? 'Managed Sessions' : 'Upcoming Sessions'}
+            </TabsTrigger>
             <TabsTrigger value="past">Past Recordings</TabsTrigger>
           </TabsList>
           
@@ -120,7 +144,6 @@ export default function Career() {
               <Card key={session.id} className="overflow-hidden border-alumni-100">
                 <div className="p-6">
                   <div className="flex flex-col md:flex-row gap-6">
-                    {/* Session Info */}
                     <div className="flex-1">
                       <h3 className="font-semibold text-xl mb-2">{session.title}</h3>
                       
@@ -162,12 +185,16 @@ export default function Career() {
                     
                     <div className="flex flex-col justify-center space-y-3">
                       <Button 
-                        className="bg-alumni-400 hover:bg-alumni-500"
+                        className={user?.role === 'faculty' 
+                          ? "bg-purple-500 hover:bg-purple-600" 
+                          : "bg-alumni-400 hover:bg-alumni-500"}
                         onClick={() => handleRegisterSession(session.id)}
                       >
-                        Register for Session
+                        {getSessionButtonText()}
                       </Button>
-                      <Button variant="outline">Add to Calendar</Button>
+                      <Button variant="outline">
+                        {user?.role === 'faculty' ? 'Edit Session' : 'Add to Calendar'}
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -209,47 +236,67 @@ export default function Career() {
 
         {/* Career resources section */}
         <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Additional Resources</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            {user?.role === 'faculty' ? 'Faculty Resources' : 'Additional Resources'}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="border-alumni-100">
               <CardHeader>
-                <CardTitle className="text-lg">Resume Library</CardTitle>
+                <CardTitle className="text-lg">
+                  {user?.role === 'faculty' ? 'Manage Resume Library' : 'Resume Library'}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Access successful resume examples from alumni across various industries.
+                  {user?.role === 'faculty' 
+                    ? 'Curate and manage successful resume examples for students.'
+                    : 'Access successful resume examples from alumni across various industries.'}
                 </p>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">Browse Examples</Button>
+                <Button variant="outline" className="w-full">
+                  {user?.role === 'faculty' ? 'Manage Library' : 'Browse Examples'}
+                </Button>
               </CardFooter>
             </Card>
             
             <Card className="border-alumni-100">
               <CardHeader>
-                <CardTitle className="text-lg">Mock Interviews</CardTitle>
+                <CardTitle className="text-lg">
+                  {user?.role === 'faculty' ? 'Coordinate Mock Interviews' : 'Mock Interviews'}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Practice your interview skills with alumni volunteers from your target companies.
+                  {user?.role === 'faculty' 
+                    ? 'Coordinate mock interview sessions between students and alumni volunteers.'
+                    : 'Practice your interview skills with alumni volunteers from your target companies.'}
                 </p>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">Schedule a Session</Button>
+                <Button variant="outline" className="w-full">
+                  {user?.role === 'faculty' ? 'Manage Sessions' : 'Schedule a Session'}
+                </Button>
               </CardFooter>
             </Card>
             
             <Card className="border-alumni-100">
               <CardHeader>
-                <CardTitle className="text-lg">Industry Guides</CardTitle>
+                <CardTitle className="text-lg">
+                  {user?.role === 'faculty' ? 'Manage Industry Guides' : 'Industry Guides'}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Detailed guides on breaking into specific industries and roles.
+                  {user?.role === 'faculty' 
+                    ? 'Create and update detailed guides for breaking into specific industries.'
+                    : 'Detailed guides on breaking into specific industries and roles.'}
                 </p>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">View Guides</Button>
+                <Button variant="outline" className="w-full">
+                  {user?.role === 'faculty' ? 'Edit Guides' : 'View Guides'}
+                </Button>
               </CardFooter>
             </Card>
           </div>
