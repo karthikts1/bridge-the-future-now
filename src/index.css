@@ -54,6 +54,18 @@
     --academic-warning: #f59e0b;
     --academic-error: #ef4444;
     --academic-link: #2563eb;
+    
+    /* Alumni color scheme */
+    --alumni-50: #f8fafc;
+    --alumni-100: #f1f5f9;
+    --alumni-200: #e2e8f0;
+    --alumni-300: #cbd5e1;
+    --alumni-400: #94a3b8;
+    --alumni-500: #64748b;
+    --alumni-600: #475569;
+    --alumni-700: #334155;
+    --alumni-800: #1e293b;
+    --alumni-900: #0f172a;
   }
 
   .dark {
@@ -109,4 +121,30 @@
   .btn-highlight {
     @apply shadow-lg border-2 border-white/20 font-semibold;
   }
+}
+
+/* Academic color utilities */
+@layer utilities {
+  .bg-academic-primary { background-color: var(--academic-primary); }
+  .bg-academic-secondary { background-color: var(--academic-secondary); }
+  .bg-academic-accent { background-color: var(--academic-accent); }
+  .bg-academic-light { background-color: var(--academic-light); }
+  .text-academic-primary { color: var(--academic-primary); }
+  .text-academic-secondary { color: var(--academic-secondary); }
+  .text-academic-muted { color: var(--academic-muted); }
+  .border-academic-primary { border-color: var(--academic-primary); }
+}
+
+/* Alumni color utilities */
+@layer utilities {
+  .bg-alumni-50 { background-color: var(--alumni-50); }
+  .bg-alumni-100 { background-color: var(--alumni-100); }
+  .bg-alumni-200 { background-color: var(--alumni-200); }
+  .bg-alumni-400 { background-color: var(--alumni-400); }
+  .bg-alumni-500 { background-color: var(--alumni-500); }
+  .bg-alumni-800 { background-color: var(--alumni-800); }
+  .bg-alumni-900 { background-color: var(--alumni-900); }
+  .text-alumni-100 { color: var(--alumni-100); }
+  .text-alumni-900 { color: var(--alumni-900); }
+  .border-alumni-100 { border-color: var(--alumni-100); }
 }
