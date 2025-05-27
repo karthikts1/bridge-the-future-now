@@ -4,8 +4,109 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { MessageSquare, Users, Briefcase, GraduationCap, Book } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
 export default function Index() {
+  const { user } = useUser();
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true" && user !== null;
+
+  // If user is authenticated, show a different homepage
+  if (isAuthenticated && user) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        
+        {/* Welcome Back Section */}
+        <section className="relative py-20 bg-gradient-to-br from-primary via-primary/90 to-primary text-white">
+          <div className="container px-4 mx-auto max-w-6xl">
+            <div className="text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                Welcome back, <span className="text-accent">{user.name}</span>!
+              </h1>
+              <p className="text-lg text-white/90 mb-8">
+                Continue your journey on AlumniConnect. Access your dashboard and connect with your network.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <Link to="/dashboard">
+                  <Button variant="bright" className="text-lg px-6 py-6 h-auto shadow-lg">
+                    Go to Dashboard
+                  </Button>
+                </Link>
+                <Link to="/dashboard/messages">
+                  <Button variant="contrast" className="text-lg px-6 py-6 h-auto shadow-lg hover:bg-white/90">
+                    View Messages
+                  </Button>
+                </Link>
+              </div>
+              <div className="flex items-center justify-center text-sm text-white/90">
+                <span className="capitalize">{user.role}</span>
+                <span className="mx-2">•</span>
+                <span>Member since {new Date().getFullYear()}</span>
+              </div>
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+        </section>
+        
+        {/* Quick Access Section */}
+        <section className="py-16 bg-white">
+          <div className="container px-4 mx-auto max-w-6xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4 text-primary">Quick Access</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Jump straight into the features you use most.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="flex flex-col items-center text-center p-6 rounded-lg border border-accent/50 hover:border-accent hover:shadow-md transition-all">
+                <div className="h-16 w-16 rounded-full bg-accent flex items-center justify-center mb-4">
+                  <MessageSquare className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-primary">Discussion Forums</h3>
+                <p className="text-muted-foreground mb-4">
+                  Engage with your community and share insights.
+                </p>
+                <Link to="/dashboard/forums">
+                  <Button variant="outline" className="mt-2">Access Forums</Button>
+                </Link>
+              </div>
+              
+              <div className="flex flex-col items-center text-center p-6 rounded-lg border border-accent/50 hover:border-accent hover:shadow-md transition-all">
+                <div className="h-16 w-16 rounded-full bg-accent flex items-center justify-center mb-4">
+                  <Users className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-primary">Mentorship</h3>
+                <p className="text-muted-foreground mb-4">
+                  {user.role === 'student' ? 'Find mentors to guide your journey.' : 'Share your experience with students.'}
+                </p>
+                <Link to="/dashboard/mentorship">
+                  <Button variant="outline" className="mt-2">View Mentorship</Button>
+                </Link>
+              </div>
+              
+              <div className="flex flex-col items-center text-center p-6 rounded-lg border border-accent/50 hover:border-accent hover:shadow-md transition-all">
+                <div className="h-16 w-16 rounded-full bg-accent flex items-center justify-center mb-4">
+                  <Briefcase className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-primary">Career Opportunities</h3>
+                <p className="text-muted-foreground mb-4">
+                  {user.role === 'student' ? 'Explore job opportunities and career guidance.' : 'Share opportunities with the community.'}
+                </p>
+                <Link to="/dashboard/career">
+                  <Button variant="outline" className="mt-2">Explore Careers</Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <Footer />
+      </div>
+    );
+  }
+
+  // Original homepage for non-authenticated users
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
