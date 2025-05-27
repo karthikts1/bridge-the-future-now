@@ -1,7 +1,8 @@
+
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Menu, LogOut, MessageSquare } from "lucide-react";
+import { Menu, LogOut, MessageSquare, LogIn } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useUser } from "@/contexts/UserContext";
@@ -19,10 +20,17 @@ export function Navbar({ isAuthenticated: propIsAuthenticated }: NavbarProps) {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const location = useLocation();
 
   const isAuthenticated = propIsAuthenticated !== undefined 
     ? propIsAuthenticated 
     : (localStorage.getItem("isAuthenticated") === "true" && user !== null);
+
+  const isActive = (path: string) => {
+    if (path === "/" && location.pathname === "/") return true;
+    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
