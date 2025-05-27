@@ -48,7 +48,7 @@
         messagesDiv.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
 
         try {
-          const response = await fetch("https://a2fc-2406-7400-75-2183-7061-c37e-88e9-aff0.ngrok-free.app", {  // ⬅️ Replace with your ngrok URL
+          const response = await fetch("https://dba2-2406-7400-75-2183-a01a-3c7f-51da-7f12.ngrok-free.app", {  // ⬅️ Replace with your ngrok URL
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: msg }),
