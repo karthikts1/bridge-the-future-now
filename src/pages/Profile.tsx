@@ -42,45 +42,6 @@ import {
 } from "@/data/profileOptions";
 import { User as UserType } from "@/types/user";
 
-// Add more predefined options for better data consistency
-const fieldOfStudyOptions = [
-  "Computer Science", "Engineering", "Business Administration", "Mathematics", 
-  "Data Science", "Information Technology", "Electrical Engineering", 
-  "Mechanical Engineering", "Civil Engineering", "Chemical Engineering",
-  "Economics", "Finance", "Marketing", "Management", "Accounting",
-  "Biology", "Chemistry", "Physics", "Psychology", "Sociology"
-];
-
-const specializationOptions = [
-  "Software Engineering", "Data Science", "Machine Learning", "Artificial Intelligence",
-  "Cybersecurity", "Web Development", "Mobile Development", "Cloud Computing",
-  "DevOps", "UI/UX Design", "Product Management", "Digital Marketing",
-  "Business Analytics", "Financial Analysis", "Project Management",
-  "Research and Development", "Quality Assurance", "Systems Administration"
-];
-
-const departmentOptions = [
-  "Computer Science", "Engineering", "Business", "Mathematics", "Science",
-  "Liberal Arts", "Medicine", "Law", "Education", "Architecture",
-  "Design", "Communications", "Economics", "Psychology", "Sociology"
-];
-
-const companyOptions = [
-  "Google", "Microsoft", "Apple", "Amazon", "Meta", "Netflix", "Tesla",
-  "IBM", "Oracle", "Salesforce", "Adobe", "Intel", "NVIDIA", "Uber",
-  "Airbnb", "Spotify", "Twitter", "LinkedIn", "Snapchat", "TikTok",
-  "Startup", "Consulting Firm", "Government", "Non-profit", "Other"
-];
-
-const positionOptions = [
-  "Software Engineer", "Senior Software Engineer", "Lead Engineer", "Engineering Manager",
-  "Data Scientist", "Data Analyst", "Machine Learning Engineer", "DevOps Engineer",
-  "Product Manager", "Project Manager", "UI/UX Designer", "Full Stack Developer",
-  "Frontend Developer", "Backend Developer", "Mobile Developer", "QA Engineer",
-  "Business Analyst", "Marketing Manager", "Sales Representative", "Consultant",
-  "Research Scientist", "Technical Lead", "CTO", "CEO", "Founder", "Other"
-];
-
 export default function Profile() {
   const { user, setUser } = useUser();
   const { toast } = useToast();
