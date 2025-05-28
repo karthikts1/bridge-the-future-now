@@ -3,50 +3,147 @@
 @tailwind utilities;
 
 @layer base {
-  /* Your existing root colors and variables are intact */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
 
-  /* Chatbox base */
-  #chatbox {
-    @apply fixed bottom-4 right-4 w-80 max-w-full rounded-xl shadow-xl border border-alumni-100 bg-alumni-50 p-4 z-50 flex flex-col;
-    height: 320px;
-    transition: height 0.3s ease;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --primary: 230 70% 30%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 60% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 220 70% 90%;
+    --accent-foreground: 220 70% 25%;
+
+    --destructive: 0 84.2% 45%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 230 70% 40%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 230 70% 95%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 230 70% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 70% 90%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 230 70% 50%;
+
+    --academic-primary: #1e3a8a;
+    --academic-secondary: #3b82f6;
+    --academic-accent: #93c5fd;
+    --academic-muted: #64748b;
+    --academic-light: #f1f5f9;
+    --academic-dark: #0f172a;
+    --academic-success: #10b981;
+    --academic-warning: #f59e0b;
+    --academic-error: #ef4444;
+    --academic-link: #2563eb;
+    
+    /* Alumni color scheme */
+    --alumni-50: #f8fafc;
+    --alumni-100: #f1f5f9;
+    --alumni-200: #e2e8f0;
+    --alumni-300: #cbd5e1;
+    --alumni-400: #94a3b8;
+    --alumni-500: #64748b;
+    --alumni-600: #475569;
+    --alumni-700: #334155;
+    --alumni-800: #1e293b;
+    --alumni-900: #0f172a;
   }
 
-  /* Messages area */
-  #messages {
-    @apply overflow-y-auto mb-3 space-y-2 text-sm text-alumni-900;
-    flex-grow: 1;
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 230 70% 55%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 220 60% 40%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 220 70% 30%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    --sidebar-background: 230 70% 15%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 230 70% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 70% 25%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 25%;
+    --sidebar-ring: 230 70% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
   }
 
-  /* Input and button container */
-  #chatbox > div.flex {
-    @apply flex gap-2;
+  body {
+    @apply bg-background text-foreground;
   }
+  
+  /* Enhanced button styling for better visibility */
+  .btn-highlight {
+    @apply shadow-lg border-2 border-white/20 font-semibold;
+  }
+}
 
-  /* Input styling */
-  #userInput {
-    @apply flex-1 px-3 py-2 border border-alumni-200 rounded-lg text-sm bg-white text-alumni-900 focus:outline-none focus:ring-2 focus:ring-[--ring];
-  }
+/* Academic color utilities */
+@layer utilities {
+  .bg-academic-primary { background-color: var(--academic-primary); }
+  .bg-academic-secondary { background-color: var(--academic-secondary); }
+  .bg-academic-accent { background-color: var(--academic-accent); }
+  .bg-academic-light { background-color: var(--academic-light); }
+  .text-academic-primary { color: var(--academic-primary); }
+  .text-academic-secondary { color: var(--academic-secondary); }
+  .text-academic-muted { color: var(--academic-muted); }
+  .border-academic-primary { border-color: var(--academic-primary); }
+}
 
-  /* Send button styling */
-  button[onclick="sendMessage()"] {
-    @apply px-4 py-2 bg-alumni-600 text-white text-sm rounded-lg hover:bg-alumni-700 transition;
-  }
-
-  /* Collapsed chatbox style */
-  #chatbox.collapsed {
-    height: 40px !important;
-    overflow: hidden;
-    cursor: pointer;
-  }
-
-  #chatbox.collapsed #messages,
-  #chatbox.collapsed > div.flex {
-    display: none;
-  }
-
-  #chatbox.collapsed::after {
-    content: "Chat";
-    @apply block text-center text-alumni-600 font-semibold pt-2;
-  }
+/* Alumni color utilities */
+@layer utilities {
+  .bg-alumni-50 { background-color: var(--alumni-50); }
+  .bg-alumni-100 { background-color: var(--alumni-100); }
+  .bg-alumni-200 { background-color: var(--alumni-200); }
+  .bg-alumni-400 { background-color: var(--alumni-400); }
+  .bg-alumni-500 { background-color: var(--alumni-500); }
+  .bg-alumni-800 { background-color: var(--alumni-800); }
+  .bg-alumni-900 { background-color: var(--alumni-900); }
+  .text-alumni-100 { color: var(--alumni-100); }
+  .text-alumni-900 { color: var(--alumni-900); }
+  .border-alumni-100 { border-color: var(--alumni-100); }
 }
