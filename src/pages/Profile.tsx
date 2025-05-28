@@ -31,7 +31,14 @@ import {
   certificationsOptions,
   languagesOptions,
   networkingGoalsOptions,
-  salaryRangeOptions
+  salaryRangeOptions,
+  fieldOfStudyOptions,
+  specializationOptions,
+  departmentOptions,
+  companyOptions,
+  positionOptions,
+  projectsOptions,
+  availabilityOptions
 } from "@/data/profileOptions";
 import { User as UserType } from "@/types/user";
 
@@ -680,6 +687,17 @@ export default function Profile() {
                               disabled={!isEditing}
                             />
                           </div>
+
+                          <div className="space-y-2">
+                            <Label>Projects Worked On</Label>
+                            <MultiSelect
+                              options={projectsOptions}
+                              selected={selectedProjects}
+                              onChange={setSelectedProjects}
+                              placeholder="Select types of projects you've worked on..."
+                              disabled={!isEditing}
+                            />
+                          </div>
                         </div>
 
                         {/* Professional Links */}
@@ -727,15 +745,22 @@ export default function Profile() {
                         {user?.role === 'alumni' && (
                           <div className="space-y-2">
                             <Label htmlFor="availability">Mentorship Availability</Label>
-                            <Textarea
-                              id="availability"
-                              name="availability"
-                              value={formData.availability || ""}
-                              onChange={handleChange}
-                              placeholder="e.g., Available weekends, 2 hours/week, etc."
+                            <Select
                               disabled={!isEditing}
-                              className="resize-none h-16"
-                            />
+                              value={formData.availability}
+                              onValueChange={(value) => handleSelectChange('availability', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select availability" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {availabilityOptions.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                         )}
                       </>

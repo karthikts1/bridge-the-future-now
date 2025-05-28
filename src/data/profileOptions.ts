@@ -60,3 +60,55 @@ export const salaryRangeOptions = [
   '$100,000 - $120,000', '$120,000 - $150,000', '$150,000 - $200,000',
   '$200,000 - $250,000', '$250,000+', 'Prefer not to say'
 ];
+
+export const fieldOfStudyOptions = [
+  "Computer Science", "Engineering", "Business Administration", "Mathematics", 
+  "Data Science", "Information Technology", "Electrical Engineering", 
+  "Mechanical Engineering", "Civil Engineering", "Chemical Engineering",
+  "Economics", "Finance", "Marketing", "Management", "Accounting",
+  "Biology", "Chemistry", "Physics", "Psychology", "Sociology"
+];
+
+export const specializationOptions = [
+  "Software Engineering", "Data Science", "Machine Learning", "Artificial Intelligence",
+  "Cybersecurity", "Web Development", "Mobile Development", "Cloud Computing",
+  "DevOps", "UI/UX Design", "Product Management", "Digital Marketing",
+  "Business Analytics", "Financial Analysis", "Project Management",
+  "Research and Development", "Quality Assurance", "Systems Administration"
+];
+
+export const departmentOptions = [
+  "Computer Science", "Engineering", "Business", "Mathematics", "Science",
+  "Liberal Arts", "Medicine", "Law", "Education", "Architecture",
+  "Design", "Communications", "Economics", "Psychology", "Sociology"
+];
+
+export const companyOptions = [
+  "Google", "Microsoft", "Apple", "Amazon", "Meta", "Netflix", "Tesla",
+  "IBM", "Oracle", "Salesforce", "Adobe", "Intel", "NVIDIA", "Uber",
+  "Airbnb", "Spotify", "Twitter", "LinkedIn", "Snapchat", "TikTok",
+  "Startup", "Consulting Firm", "Government", "Non-profit", "Other"
+];
+
+export const positionOptions = [
+  "Software Engineer", "Senior Software Engineer", "Lead Engineer", "Engineering Manager",
+  "Data Scientist", "Data Analyst", "Machine Learning Engineer", "DevOps Engineer",
+  "Product Manager", "Project Manager", "UI/UX Designer", "Full Stack Developer",
+  "Frontend Developer", "Backend Developer", "Mobile Developer", "QA Engineer",
+  "Business Analyst", "Marketing Manager", "Sales Representative", "Consultant",
+  "Research Scientist", "Technical Lead", "CTO", "CEO", "Founder", "Other"
+];
+
+export const projectsOptions = [
+  "E-commerce Website", "Mobile App", "Data Analytics Dashboard", "Machine Learning Model",
+  "Web Application", "API Development", "Database Design", "UI/UX Design Project",
+  "Open Source Contribution", "Research Project", "Hackathon Project", "Startup Project",
+  "Game Development", "Blockchain Application", "IoT Project", "AI Chatbot",
+  "Social Media Platform", "Content Management System", "Portfolio Website", "Other"
+];
+
+export const availabilityOptions = [
+  "Weekends only", "Weekday evenings", "1-2 hours per week", "3-5 hours per week",
+  "Flexible schedule", "By appointment only", "Monthly meetings", "Bi-weekly meetings",
+  "Weekly meetings", "Available during business hours", "Limited availability", "Very flexible"
+];
