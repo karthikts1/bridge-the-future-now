@@ -19,23 +19,37 @@
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
     <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  </head>
-
-  <body>
-    <div id="root"></div>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
 
-    <!-- Corrected path to main.tsx file -->
+    <!-- Tailwind main script -->
     <script type="module" src="src/main.tsx"></script>
+  </head>
 
-    <!-- 💬 Chatbot Widget -->
-    <div id="chatbox" style="position: fixed; bottom: 20px; right: 20px; width: 320px; background: white; border: 1px solid #ccc; padding: 12px; border-radius: 12px; box-shadow: 0px 0px 15px rgba(0,0,0,0.1); font-family: sans-serif; z-index: 9999;">
-      <div id="messages" style="height: 200px; overflow-y: auto; margin-bottom: 10px; font-size: 14px;"></div>
-      <input type="text" id="userInput" placeholder="Type your message..." style="width: 70%; padding: 6px;" />
-      <button onclick="sendMessage()" style="padding: 6px 10px;">Send</button>
+  <body class="relative font-sans bg-background text-foreground">
+
+    <div id="root"></div>
+
+    <!-- 💬 AlumniConnect Chatbot Widget -->
+    <div id="chatbox" class="fixed bottom-4 right-4 w-80 max-w-full bg-alumni-50 border border-alumni-100 rounded-xl shadow-xl p-4 z-50">
+      <div id="messages" class="h-52 overflow-y-auto mb-3 space-y-2 text-sm text-alumni-900"></div>
+      <div class="flex gap-2">
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Ask AlumniConnect..."
+          class="flex-1 px-3 py-2 border border-alumni-200 rounded-lg text-sm bg-white text-alumni-900 focus:outline-none focus:ring-2 focus:ring-[--ring]"
+          onkeydown="if(event.key === 'Enter') sendMessage()"
+        />
+        <button
+          onclick="sendMessage()"
+          class="px-4 py-2 bg-alumni-600 text-white text-sm rounded-lg hover:bg-alumni-700 transition"
+        >
+          Send
+        </button>
+      </div>
     </div>
 
     <script>
@@ -58,11 +72,13 @@
           messagesDiv.innerHTML += `<div><strong>Bot:</strong> ${data.response}</div>`;
           messagesDiv.scrollTop = messagesDiv.scrollHeight;
         } catch (error) {
-          messagesDiv.innerHTML += `<div style="color:red;">Error contacting bot</div>`;
+          messagesDiv.innerHTML += `<div class="text-red-500">⚠️ Error: Could not reach bot</div>`;
         }
 
         input.value = "";
       }
     </script>
+
   </body>
 </html>
+
