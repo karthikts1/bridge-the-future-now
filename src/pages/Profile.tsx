@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -22,6 +21,18 @@ import {
 } from "@/components/ui/select";
 import { courses, getDepartments, getCoursesByDepartment } from "@/data/coursesData";
 import { Badge } from "@/components/ui/badge";
+import { MultiSelect } from "@/components/ui/multi-select";
+import {
+  skillsOptions,
+  interestsOptions,
+  industryOptions,
+  locationOptions,
+  mentorshipInterestsOptions,
+  certificationsOptions,
+  languagesOptions,
+  networkingGoalsOptions,
+  salaryRangeOptions
+} from "@/data/profileOptions";
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -30,7 +41,7 @@ export default function Profile() {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [selectedCourses, setSelectedCourses] = useState<string[]>(user?.courses || []);
 
-  // Form state
+  // Form state - keep existing form data structure and add new fields
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -39,11 +50,37 @@ export default function Profile() {
     company: user?.company || "",
     department: user?.department || "",
     graduationYear: user?.graduationYear || "",
-    field: user?.field || ""
+    field: user?.field || "",
+    industry: user?.industry || "",
+    location: user?.location || "",
+    specialization: user?.specialization || "",
+    careerGoals: user?.careerGoals || "",
+    linkedinProfile: user?.linkedinProfile || "",
+    githubProfile: user?.githubProfile || "",
+    portfolioUrl: user?.portfolioUrl || "",
+    preferredWorkType: user?.preferredWorkType || "",
+    salaryRange: user?.salaryRange || "",
+    workingHours: user?.workingHours || "",
+    careerStage: user?.careerStage || "",
+    availability: user?.availability || "",
+    experienceYears: user?.experienceYears || 0
   });
+
+  // Multi-select state
+  const [selectedSkills, setSelectedSkills] = useState<string[]>(user?.skills || []);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(user?.interests || []);
+  const [selectedMentorshipInterests, setSelectedMentorshipInterests] = useState<string[]>(user?.mentorshipInterests || []);
+  const [selectedCertifications, setSelectedCertifications] = useState<string[]>(user?.certifications || []);
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>(user?.languages || []);
+  const [selectedNetworkingGoals, setSelectedNetworkingGoals] = useState<string[]>(user?.networkingGoals || []);
+  const [selectedProjects, setSelectedProjects] = useState<string[]>(user?.projectsWorkedOn || []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -58,11 +95,18 @@ export default function Profile() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Update user context
+    // Update user context with all data including multi-select values
     const updatedUser = {
       ...user!,
       ...formData,
-      courses: selectedCourses
+      courses: selectedCourses,
+      skills: selectedSkills,
+      interests: selectedInterests,
+      mentorshipInterests: selectedMentorshipInterests,
+      certifications: selectedCertifications,
+      languages: selectedLanguages,
+      networkingGoals: selectedNetworkingGoals,
+      projectsWorkedOn: selectedProjects
     };
     
     setUser(updatedUser);
@@ -91,7 +135,7 @@ export default function Profile() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Profile summary card */}
+          {/* Profile summary card - keep existing code */}
           <Card className="w-full lg:w-1/3 border-alumni-100">
             <CardHeader className="pb-2">
               <CardTitle>Profile Summary</CardTitle>
@@ -187,6 +231,7 @@ export default function Profile() {
               <CardContent>
                 <form onSubmit={handleSave} className="space-y-6">
                   <div className="space-y-4">
+                    {/* Basic Information */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name</Label>
@@ -223,33 +268,131 @@ export default function Profile() {
                         className="resize-none h-24"
                       />
                     </div>
+
+                    {/* Location and Industry */}
+                    {(user?.role === 'student' || user?.role === 'alumni') && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="location">Location</Label>
+                          <Select
+                            disabled={!isEditing}
+                            value={formData.location}
+                            onValueChange={(value) => handleSelectChange('location', value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select location" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {locationOptions.map((location) => (
+                                <SelectItem key={location} value={location}>
+                                  {location}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="industry">Preferred Industry</Label>
+                          <Select
+                            disabled={!isEditing}
+                            value={formData.industry}
+                            onValueChange={(value) => handleSelectChange('industry', value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select industry" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {industryOptions.map((industry) => (
+                                <SelectItem key={industry} value={industry}>
+                                  {industry}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    )}
                     
                     <Separator className="my-4" />
                     
-                    {/* Role-specific fields */}
+                    {/* Role-specific fields - keep existing alumni, faculty, student fields */}
                     {user?.role === 'alumni' && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="position">Current Position</Label>
-                          <Input
-                            id="position"
-                            name="position"
-                            value={formData.position || ""}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                          />
+                      <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="position">Current Position</Label>
+                            <Input
+                              id="position"
+                              name="position"
+                              value={formData.position || ""}
+                              onChange={handleChange}
+                              disabled={!isEditing}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="company">Company</Label>
+                            <Input
+                              id="company"
+                              name="company"
+                              value={formData.company || ""}
+                              onChange={handleChange}
+                              disabled={!isEditing}
+                            />
+                          </div>
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="company">Company</Label>
-                          <Input
-                            id="company"
-                            name="company"
-                            value={formData.company || ""}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                          />
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="experienceYears">Years of Experience</Label>
+                            <Input
+                              id="experienceYears"
+                              name="experienceYears"
+                              type="number"
+                              value={formData.experienceYears || ""}
+                              onChange={handleChange}
+                              disabled={!isEditing}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="careerStage">Career Stage</Label>
+                            <Select
+                              disabled={!isEditing}
+                              value={formData.careerStage}
+                              onValueChange={(value) => handleSelectChange('careerStage', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select career stage" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="entry-level">Entry Level</SelectItem>
+                                <SelectItem value="mid-level">Mid Level</SelectItem>
+                                <SelectItem value="senior-level">Senior Level</SelectItem>
+                                <SelectItem value="executive">Executive</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
-                      </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="salaryRange">Salary Range</Label>
+                          <Select
+                            disabled={!isEditing}
+                            value={formData.salaryRange}
+                            onValueChange={(value) => handleSelectChange('salaryRange', value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select salary range" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {salaryRangeOptions.map((range) => (
+                                <SelectItem key={range} value={range}>
+                                  {range}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </>
                     )}
                     
                     {user?.role === 'faculty' && (
@@ -266,31 +409,231 @@ export default function Profile() {
                     )}
                     
                     {(user?.role === 'student' || user?.role === 'alumni') && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="field">Field of Study</Label>
+                            <Input
+                              id="field"
+                              name="field"
+                              value={formData.field || ""}
+                              onChange={handleChange}
+                              disabled={!isEditing}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="graduationYear">Graduation Year</Label>
+                            <Input
+                              id="graduationYear"
+                              name="graduationYear"
+                              value={formData.graduationYear || ""}
+                              onChange={handleChange}
+                              disabled={!isEditing}
+                            />
+                          </div>
+                        </div>
+
                         <div className="space-y-2">
-                          <Label htmlFor="field">Field of Study</Label>
+                          <Label htmlFor="specialization">Specialization</Label>
                           <Input
-                            id="field"
-                            name="field"
-                            value={formData.field || ""}
+                            id="specialization"
+                            name="specialization"
+                            value={formData.specialization || ""}
                             onChange={handleChange}
+                            placeholder="e.g., Software Engineering, Data Science, etc."
                             disabled={!isEditing}
                           />
                         </div>
+
                         <div className="space-y-2">
-                          <Label htmlFor="graduationYear">Graduation Year</Label>
-                          <Input
-                            id="graduationYear"
-                            name="graduationYear"
-                            value={formData.graduationYear || ""}
+                          <Label htmlFor="careerGoals">Career Goals</Label>
+                          <Textarea
+                            id="careerGoals"
+                            name="careerGoals"
+                            value={formData.careerGoals || ""}
                             onChange={handleChange}
+                            placeholder="Describe your career aspirations..."
                             disabled={!isEditing}
+                            className="resize-none h-20"
                           />
                         </div>
-                      </div>
+
+                        {user?.role === 'student' && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="preferredWorkType">Preferred Work Type</Label>
+                              <Select
+                                disabled={!isEditing}
+                                value={formData.preferredWorkType}
+                                onValueChange={(value) => handleSelectChange('preferredWorkType', value)}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select work type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="remote">Remote</SelectItem>
+                                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                                  <SelectItem value="onsite">On-site</SelectItem>
+                                  <SelectItem value="flexible">Flexible</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="workingHours">Working Hours Preference</Label>
+                              <Select
+                                disabled={!isEditing}
+                                value={formData.workingHours}
+                                onValueChange={(value) => handleSelectChange('workingHours', value)}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select working hours" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="full-time">Full-time</SelectItem>
+                                  <SelectItem value="part-time">Part-time</SelectItem>
+                                  <SelectItem value="contract">Contract</SelectItem>
+                                  <SelectItem value="internship">Internship</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        )}
+                      </>
                     )}
 
-                    {/* Course selection section */}
+                    {/* Skills and Interests for Students and Alumni */}
+                    {(user?.role === 'student' || user?.role === 'alumni') && (
+                      <>
+                        <Separator className="my-4" />
+                        
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <Label>Skills</Label>
+                            <MultiSelect
+                              options={skillsOptions}
+                              selected={selectedSkills}
+                              onChange={setSelectedSkills}
+                              placeholder="Select your skills..."
+                              disabled={!isEditing}
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Interests</Label>
+                            <MultiSelect
+                              options={interestsOptions}
+                              selected={selectedInterests}
+                              onChange={setSelectedInterests}
+                              placeholder="Select your interests..."
+                              disabled={!isEditing}
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Mentorship Interests</Label>
+                            <MultiSelect
+                              options={mentorshipInterestsOptions}
+                              selected={selectedMentorshipInterests}
+                              onChange={setSelectedMentorshipInterests}
+                              placeholder={user?.role === 'student' ? "What you'd like to learn..." : "What you'd like to mentor..."}
+                              disabled={!isEditing}
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Certifications</Label>
+                            <MultiSelect
+                              options={certificationsOptions}
+                              selected={selectedCertifications}
+                              onChange={setSelectedCertifications}
+                              placeholder="Select your certifications..."
+                              disabled={!isEditing}
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Languages</Label>
+                            <MultiSelect
+                              options={languagesOptions}
+                              selected={selectedLanguages}
+                              onChange={setSelectedLanguages}
+                              placeholder="Select languages you speak..."
+                              disabled={!isEditing}
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Networking Goals</Label>
+                            <MultiSelect
+                              options={networkingGoalsOptions}
+                              selected={selectedNetworkingGoals}
+                              onChange={setSelectedNetworkingGoals}
+                              placeholder="What are you looking to achieve through networking..."
+                              disabled={!isEditing}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Professional Links */}
+                        <Separator className="my-4" />
+                        
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-medium">Professional Links</h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="linkedinProfile">LinkedIn Profile</Label>
+                              <Input
+                                id="linkedinProfile"
+                                name="linkedinProfile"
+                                value={formData.linkedinProfile || ""}
+                                onChange={handleChange}
+                                placeholder="https://linkedin.com/in/yourprofile"
+                                disabled={!isEditing}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="githubProfile">GitHub Profile</Label>
+                              <Input
+                                id="githubProfile"
+                                name="githubProfile"
+                                value={formData.githubProfile || ""}
+                                onChange={handleChange}
+                                placeholder="https://github.com/yourusername"
+                                disabled={!isEditing}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="portfolioUrl">Portfolio URL</Label>
+                            <Input
+                              id="portfolioUrl"
+                              name="portfolioUrl"
+                              value={formData.portfolioUrl || ""}
+                              onChange={handleChange}
+                              placeholder="https://yourportfolio.com"
+                              disabled={!isEditing}
+                            />
+                          </div>
+                        </div>
+
+                        {user?.role === 'alumni' && (
+                          <div className="space-y-2">
+                            <Label htmlFor="availability">Mentorship Availability</Label>
+                            <Textarea
+                              id="availability"
+                              name="availability"
+                              value={formData.availability || ""}
+                              onChange={handleChange}
+                              placeholder="e.g., Available weekends, 2 hours/week, etc."
+                              disabled={!isEditing}
+                              className="resize-none h-16"
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {/* Course selection section - keep existing course selection logic */}
                     {(user?.role === 'student' || user?.role === 'alumni') && isEditing && (
                       <>
                         <Separator className="my-4" />
@@ -361,7 +704,7 @@ export default function Profile() {
                       </>
                     )}
 
-                    {/* Show enrolled courses when not editing */}
+                    {/* Show enrolled courses when not editing - keep existing logic */}
                     {(user?.role === 'student' || user?.role === 'alumni') && !isEditing && user?.courses && user.courses.length > 0 && (
                       <>
                         <Separator className="my-4" />

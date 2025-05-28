@@ -23,6 +23,20 @@ export interface User {
   location?: string; // Geographic location
   experienceYears?: number; // Years of experience (for alumni)
   specialization?: string; // Area of specialization
+  // New fields for enhanced recommendations
+  linkedinProfile?: string;
+  githubProfile?: string;
+  portfolioUrl?: string;
+  preferredWorkType?: 'remote' | 'hybrid' | 'onsite' | 'flexible';
+  salaryRange?: string;
+  workingHours?: 'full-time' | 'part-time' | 'contract' | 'internship';
+  mentorshipInterests?: string[]; // What they want to learn/teach
+  projectsWorkedOn?: string[];
+  certifications?: string[];
+  languages?: string[]; // Programming/spoken languages
+  careerStage?: 'entry-level' | 'mid-level' | 'senior-level' | 'executive';
+  networkingGoals?: string[];
+  availability?: string; // For mentorship
 }
 
 export interface Message {
