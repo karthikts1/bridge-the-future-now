@@ -33,6 +33,7 @@ import {
   networkingGoalsOptions,
   salaryRangeOptions
 } from "@/data/profileOptions";
+import { User as UserType } from "@/types/user";
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -96,9 +97,13 @@ export default function Profile() {
     e.preventDefault();
     
     // Update user context with all data including multi-select values
-    const updatedUser = {
+    const updatedUser: UserType = {
       ...user!,
       ...formData,
+      // Properly type the union type fields
+      preferredWorkType: formData.preferredWorkType as UserType['preferredWorkType'],
+      workingHours: formData.workingHours as UserType['workingHours'],
+      careerStage: formData.careerStage as UserType['careerStage'],
       courses: selectedCourses,
       skills: selectedSkills,
       interests: selectedInterests,
