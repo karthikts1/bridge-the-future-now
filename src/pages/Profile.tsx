@@ -35,6 +35,45 @@ import {
 } from "@/data/profileOptions";
 import { User as UserType } from "@/types/user";
 
+// Add more predefined options for better data consistency
+const fieldOfStudyOptions = [
+  "Computer Science", "Engineering", "Business Administration", "Mathematics", 
+  "Data Science", "Information Technology", "Electrical Engineering", 
+  "Mechanical Engineering", "Civil Engineering", "Chemical Engineering",
+  "Economics", "Finance", "Marketing", "Management", "Accounting",
+  "Biology", "Chemistry", "Physics", "Psychology", "Sociology"
+];
+
+const specializationOptions = [
+  "Software Engineering", "Data Science", "Machine Learning", "Artificial Intelligence",
+  "Cybersecurity", "Web Development", "Mobile Development", "Cloud Computing",
+  "DevOps", "UI/UX Design", "Product Management", "Digital Marketing",
+  "Business Analytics", "Financial Analysis", "Project Management",
+  "Research and Development", "Quality Assurance", "Systems Administration"
+];
+
+const departmentOptions = [
+  "Computer Science", "Engineering", "Business", "Mathematics", "Science",
+  "Liberal Arts", "Medicine", "Law", "Education", "Architecture",
+  "Design", "Communications", "Economics", "Psychology", "Sociology"
+];
+
+const companyOptions = [
+  "Google", "Microsoft", "Apple", "Amazon", "Meta", "Netflix", "Tesla",
+  "IBM", "Oracle", "Salesforce", "Adobe", "Intel", "NVIDIA", "Uber",
+  "Airbnb", "Spotify", "Twitter", "LinkedIn", "Snapchat", "TikTok",
+  "Startup", "Consulting Firm", "Government", "Non-profit", "Other"
+];
+
+const positionOptions = [
+  "Software Engineer", "Senior Software Engineer", "Lead Engineer", "Engineering Manager",
+  "Data Scientist", "Data Analyst", "Machine Learning Engineer", "DevOps Engineer",
+  "Product Manager", "Project Manager", "UI/UX Designer", "Full Stack Developer",
+  "Frontend Developer", "Backend Developer", "Mobile Developer", "QA Engineer",
+  "Business Analyst", "Marketing Manager", "Sales Representative", "Consultant",
+  "Research Scientist", "Technical Lead", "CTO", "CEO", "Founder", "Other"
+];
+
 export default function Profile() {
   const { user, setUser } = useUser();
   const { toast } = useToast();
@@ -320,43 +359,69 @@ export default function Profile() {
                     
                     <Separator className="my-4" />
                     
-                    {/* Role-specific fields - keep existing alumni, faculty, student fields */}
+                    {/* Role-specific fields with dropdown menus */}
                     {user?.role === 'alumni' && (
                       <>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor="position">Current Position</Label>
-                            <Input
-                              id="position"
-                              name="position"
-                              value={formData.position || ""}
-                              onChange={handleChange}
+                            <Select
                               disabled={!isEditing}
-                            />
+                              value={formData.position}
+                              onValueChange={(value) => handleSelectChange('position', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select position" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {positionOptions.map((position) => (
+                                  <SelectItem key={position} value={position}>
+                                    {position}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="company">Company</Label>
-                            <Input
-                              id="company"
-                              name="company"
-                              value={formData.company || ""}
-                              onChange={handleChange}
+                            <Select
                               disabled={!isEditing}
-                            />
+                              value={formData.company}
+                              onValueChange={(value) => handleSelectChange('company', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select company" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {companyOptions.map((company) => (
+                                  <SelectItem key={company} value={company}>
+                                    {company}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor="experienceYears">Years of Experience</Label>
-                            <Input
-                              id="experienceYears"
-                              name="experienceYears"
-                              type="number"
-                              value={formData.experienceYears || ""}
-                              onChange={handleChange}
+                            <Select
                               disabled={!isEditing}
-                            />
+                              value={formData.experienceYears?.toString() || ""}
+                              onValueChange={(value) => handleSelectChange('experienceYears', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select experience" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: 31 }, (_, i) => (
+                                  <SelectItem key={i} value={i.toString()}>
+                                    {i} {i === 1 ? 'year' : 'years'}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="careerStage">Career Stage</Label>
@@ -403,13 +468,22 @@ export default function Profile() {
                     {user?.role === 'faculty' && (
                       <div className="space-y-2">
                         <Label htmlFor="department">Department</Label>
-                        <Input
-                          id="department"
-                          name="department"
-                          value={formData.department || ""}
-                          onChange={handleChange}
+                        <Select
                           disabled={!isEditing}
-                        />
+                          value={formData.department}
+                          onValueChange={(value) => handleSelectChange('department', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select department" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {departmentOptions.map((dept) => (
+                              <SelectItem key={dept} value={dept}>
+                                {dept}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     )}
                     
@@ -418,36 +492,65 @@ export default function Profile() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor="field">Field of Study</Label>
-                            <Input
-                              id="field"
-                              name="field"
-                              value={formData.field || ""}
-                              onChange={handleChange}
+                            <Select
                               disabled={!isEditing}
-                            />
+                              value={formData.field}
+                              onValueChange={(value) => handleSelectChange('field', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select field of study" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {fieldOfStudyOptions.map((field) => (
+                                  <SelectItem key={field} value={field}>
+                                    {field}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="graduationYear">Graduation Year</Label>
-                            <Input
-                              id="graduationYear"
-                              name="graduationYear"
-                              value={formData.graduationYear || ""}
-                              onChange={handleChange}
+                            <Select
                               disabled={!isEditing}
-                            />
+                              value={formData.graduationYear}
+                              onValueChange={(value) => handleSelectChange('graduationYear', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select graduation year" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: 20 }, (_, i) => {
+                                  const year = new Date().getFullYear() - 10 + i;
+                                  return (
+                                    <SelectItem key={year} value={year.toString()}>
+                                      {year}
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
                           </div>
                         </div>
 
                         <div className="space-y-2">
                           <Label htmlFor="specialization">Specialization</Label>
-                          <Input
-                            id="specialization"
-                            name="specialization"
-                            value={formData.specialization || ""}
-                            onChange={handleChange}
-                            placeholder="e.g., Software Engineering, Data Science, etc."
+                          <Select
                             disabled={!isEditing}
-                          />
+                            value={formData.specialization}
+                            onValueChange={(value) => handleSelectChange('specialization', value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select specialization" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {specializationOptions.map((spec) => (
+                                <SelectItem key={spec} value={spec}>
+                                  {spec}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
 
                         <div className="space-y-2">
