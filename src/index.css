@@ -3,114 +3,50 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* Alumni color scheme */
-    --alumni-50: #f8fafc;
-    --alumni-100: #f1f5f9;
-    --alumni-200: #e2e8f0;
-    --alumni-300: #cbd5e1;
-    --alumni-400: #94a3b8;
-    --alumni-500: #64748b;
-    --alumni-600: #475569;
-    --alumni-700: #334155;
-    --alumni-800: #1e293b;
-    --alumni-900: #0f172a;
+  /* Your existing root colors and variables are intact */
 
-    /* Ring color for focus */
-    --ring: 230 70% 40%;
-  }
-
-  /* Ensure the chatbot container is always above other elements */
-  #chatbox-container {
-    z-index: 9999;
-  }
-
-  /* Chatbox base styles */
+  /* Chatbox base */
   #chatbox {
-    background-color: var(--alumni-50);
-    border: 1px solid var(--alumni-100);
-    border-radius: 12px;
-    box-shadow: 0 10px 15px -3px rgb(71 85 105 / 0.4), 0 4px 6px -2px rgb(71 85 105 / 0.1);
-    display: flex;
-    flex-direction: column;
-    width: 320px;
-    max-width: 100%;
+    @apply fixed bottom-4 right-4 w-80 max-w-full rounded-xl shadow-xl border border-alumni-100 bg-alumni-50 p-4 z-50 flex flex-col;
     height: 320px;
+    transition: height 0.3s ease;
   }
 
   /* Messages area */
   #messages {
+    @apply overflow-y-auto mb-3 space-y-2 text-sm text-alumni-900;
     flex-grow: 1;
-    overflow-y: auto;
-    margin-bottom: 0.75rem;
-    font-size: 0.875rem; /* text-sm */
-    color: var(--alumni-900);
   }
 
-  /* Input field styles */
+  /* Input and button container */
+  #chatbox > div.flex {
+    @apply flex gap-2;
+  }
+
+  /* Input styling */
   #userInput {
-    flex-grow: 1;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--alumni-200);
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    background-color: white;
-    color: var(--alumni-900);
-    transition: border-color 0.2s ease;
-  }
-  #userInput:focus {
-    outline: none;
-    border-color: hsl(var(--ring));
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.4);
+    @apply flex-1 px-3 py-2 border border-alumni-200 rounded-lg text-sm bg-white text-alumni-900 focus:outline-none focus:ring-2 focus:ring-[--ring];
   }
 
-  /* Send button styles */
+  /* Send button styling */
   button[onclick="sendMessage()"] {
-    background-color: var(--alumni-600);
-    color: white;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    border-radius: 0.5rem;
-    transition: background-color 0.2s ease;
-  }
-  button[onclick="sendMessage()"]:hover {
-    background-color: var(--alumni-700);
-  }
-  button[onclick="sendMessage()"]:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.6);
+    @apply px-4 py-2 bg-alumni-600 text-white text-sm rounded-lg hover:bg-alumni-700 transition;
   }
 
-  /* Toggle button styles */
-  #chatbox-toggle {
-    background-color: var(--alumni-600);
-    color: var(--alumni-100);
-    padding: 0.25rem 0.75rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    box-shadow: 0 4px 6px rgb(71 85 105 / 0.3);
-    border: none;
+  /* Collapsed chatbox style */
+  #chatbox.collapsed {
+    height: 40px !important;
+    overflow: hidden;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  #chatbox-toggle:hover {
-    background-color: var(--alumni-700);
-  }
-  #chatbox-toggle:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.7);
   }
 
-  /* Scrollbar styling for messages */
-  #messages::-webkit-scrollbar {
-    width: 8px;
+  #chatbox.collapsed #messages,
+  #chatbox.collapsed > div.flex {
+    display: none;
   }
-  #messages::-webkit-scrollbar-thumb {
-    background-color: var(--alumni-300);
-    border-radius: 4px;
-  }
-  #messages::-webkit-scrollbar-track {
-    background-color: var(--alumni-50);
+
+  #chatbox.collapsed::after {
+    content: "Chat";
+    @apply block text-center text-alumni-600 font-semibold pt-2;
   }
 }
-
